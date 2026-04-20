@@ -29,6 +29,8 @@ All notable changes to I.D.L.E.R.P.G. will be documented in this file.
 
 ## v1.1 - Age of Artifacts
 
+=======
+>>>>>>> f3e15f7ce97354eefc5fcc548d60211b29ca4436
 ### Added
 - **Grammar-Based Item Naming System** - Items now build names dynamically based on power level:
   - Power 1-9: `[Base]` → "Dagger"
