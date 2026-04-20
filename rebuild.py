@@ -94,6 +94,11 @@ ACT_NAMES = [
     "The End of Days", "The New Era"
 ]
 
+def get_act_name(act_index):
+    if act_index <= len(ACT_NAMES):
+        return ACT_NAMES[act_index - 1]
+    return "Restarting the Universe"
+
 # ── Boss Quest Templates ────────────────────────────────────────────────────
 BOSS_QUESTS = [
     {"name": "The Gatekeeper", "steps": [("travel", 2), ("fight", 4), ("loot", 1), ("return", 1)]},
@@ -363,6 +368,15 @@ ACTION_FLAVORS = {
         "Convinced the vendor that 'slightly used' meant 'vintage'.",
         "Dumped a bag of rusty swords on the floor. Took the gold.",
     ],
+    "market": [
+        "Bargained with every merchant in town.",
+        "Compared prices across three shops.",
+        "Persuaded the blacksmith to part with premium gear.",
+        "Scoured the marketplace for bargains.",
+        "Negotiated like a seasoned trader.",
+        "Found exactly what was needed. Maybe.",
+        "Left no merchant unbothered.",
+    ],
     "ghost": [
         "Haunted the corridor in transparent indignation.",
         "Rattled chains for lack of options.",
@@ -394,13 +408,67 @@ ACTION_FLAVORS = {
 }
 
 # ── Item Generation ────────────────────────────────────────────────────────────
-ITEM_PREFIXES = [
-    "Shoddy", "Iron", "Gleaming", "Obsidian", "Cursed", "Arcane", "Gilded",
-    "Rusted", "Enchanted", "Blessed", "Tainted", "Ancient", "Shadow", "Storm",
-    "Void", "Radiant", "Infernal", "Divine", "Silver", "Mythril",
-    "Cracked", "Fabled", "Ethereal", "Grim", "Luminous", "Vexed", "Jagged",
-    "Frozen", "Volcanic", "Celestial", "Corrupted", "Starlight", "Bloodstained",
-    "Titanic", "Whispering", "Forgotten", "Prismatic", "Abyssal", "Hallowed"
+STANDARD_PREFIXES = [
+    "Shoddy", "Rusty", "Iron", "Crude", "Basic", "Simple", "Battered",
+    "Used", "Second-Hand", "Plain", "Common", "Ordinary", "Humble"
+]
+
+EPIC_PREFIXES = [
+    "Knight's", "Heroic", "Noble", "Ancient", "Champion's", "Warden",
+    "Veteran's", "Master's", "Royal", "Arcane", "Enchanted", "Blessed",
+    "Guardian", "Protector's", "Avenger", "Crusader", "Paladin's", "Runic"
+]
+
+LEGENDARY_PREFIXES = [
+    "Legendary", "Divine", "Celestial", "Eternal", "Sovereign", "Mythic",
+    "Heavenly", "Archangel's", "Sacred", "Transcendent", "Primordial", "Ethereal",
+    "Aegis", "Pantheon's", "Olympian", "Celestia's", "Ascendant", "Elysian"
+]
+
+# ── Grammar-Based Item Naming Pools ───────────────────────────────────────────────
+LOW_TIER_PREFIX = [
+    "Rusty", "Shoddy", "Crude", "Bent", "Dull", "Worn", "Battered", "Polished",
+    "Weighted", "Reinforced", "Tempered", "Pitted", "Blunted", "Sooty", "Dented",
+    "Notched", "Corroded", "Oiled", "Balanced", "Reliable", "Sturdy", "Heavy",
+    "Lightweight", "Scratched", "Chipped", "Splintered", "Grubby", "Mended",
+    "Serviceable", "Glittering", "Pristine", "Brilliant", "Cold-Forged"
+]
+
+MID_TIER_MATERIAL = [
+    "Steel", "Iron", "Bronze", "Mithril", "Adamantite", "Obsidian", "Dragonbone",
+    "Ebonsteel", "Crystal", "Silver", "Cold-Iron", "Meteorite", "Cobalt", "Titanium",
+    "Electrum", "Ghost-Wood", "Sun-Glass", "Void-Stone", "Living-Wood", "Darkscale",
+    "Aether-Silk", "Star-Metal", "Orichalcum", "Plasteel", "Brimstone", "Moonsilver",
+    "Deep-Platinum", "Runite", "Dwarven-Gold", "Ancient-Oak"
+]
+
+HIGH_TIER_SUFFIX = [
+    "of Whispers", "of the Void", "of Embers", "of Darkness", "of Light",
+    "of Storms", "of the Deep", "of Shadows", "of Many Sorrows", "of the Phoenix",
+    "of Frozen Time", "of Blight", "of Thousand Cuts", "of the Mad King",
+    "of Unending Night", "of the Sun-Eater", "of Woe", "of Infinite Regret",
+    "of the Comet", "of Raging Tides", "of the Blood Moon", "of Ruin",
+    "of Fallen Empires", "of the Silent One", "of Eternal Rest", "of Catastrophe",
+    "of Malice", "of Grace", "of Dread", "of the Outer Planes"
+]
+
+QUALITY_TIER = [
+    "Ruinous", "Vorpal", "Exalted", "Eternal", "Primordial", "Divine", "Celestial",
+    "Mythic", "Hallowed", "Blighted", "Shattered", "Transcendent", "Cursed",
+    "Anomalous", "God-Slaying", "World-Ender", "Apostate", "Vengeful", "Ineffable",
+    "Sovereign", "Singularity", "Apex", "Omniscient", "Radiant", "Fabled",
+    "Ethereal", "Infinite", "Doomed", "Unstoppable", "Abyssal"
+]
+
+LEGENDARY_TITLES = [
+    "The Harbinger", "Last Light", "Doomgiver", "The End", "Hope's Edge",
+    "World-Breaker", "The Void", "Eternal Dawn", "Silence", "The Final Word",
+    "Breaking Point", "Kindling for the Pyre", "Descent Into Madness",
+    "The Bench", "Shattered Promise", "Grave-Digger", "Fate-Twister",
+    "The Architect", "Echo of the Fall", "The Last Laugh", "Star-Crush",
+    "Oblivion's Kiss", "The Unmaker", "Soul-Anchor", "Aether-Spire",
+    "Calamity's Wake", "The Mourning Star", "Heart-Stopper", "The Paradox",
+    "Nightfall", "The Great Leveller", "Cruel Mercy"
 ]
 
 ITEM_BASES = {
@@ -484,8 +552,6 @@ TIERED_SPELLS = {
 # ══════════════════════════════════════════════════════════════════════════════
 #  CONFIG  (tweak gameplay here)
 # ══════════════════════════════════════════════════════════════════════════════
-VENDOR_QUEST_INTERVAL = 6     # quests between forced vendor visits
-INVENTORY_MAX         = 20    # slots before bag-full vendor trip
 if getattr(sys, 'frozen', False):
     # The directory where the .exe is located
     BASE_DIR = os.path.dirname(sys.executable)
@@ -521,6 +587,7 @@ ACTION_LABELS = {
     "loot":        "Looting...",
     "return":      "Returning to town...",
     "rest":        "Resting...",
+    "market":      "At the market...",
     "sell":        "Selling at vendor...",
     "ghost":       "Haunting the area...",
     "body":        "Finding the body...",
@@ -540,15 +607,50 @@ def roll_stat():
 def random_name():
     return random.choice(NAME_PREFIXES) + random.choice(NAME_SUFFIXES)
 
-def generate_item(level):
+def generate_item(level, allow_stacked_prefix=True):
     slot   = random.choice(EQUIP_SLOTS)
-    prefix = random.choice(ITEM_PREFIXES)
     base   = random.choice(ITEM_BASES[slot])
     stat   = random.choice(STAT_KEYS)
-    bonus  = random.randint(1, max(1, level // 2 + 1))
-    power  = level + random.randint(0, 3)
-    return {"name": f"{prefix} {base}", "slot": slot,
-            "stat": stat, "bonus": bonus, "power": power, "upgrade": 0}
+    bonus  = 1 + (level // 3)
+    power  = level + random.randint(0, 1)
+    weight = 1 + (power // 5)
+
+    parts = []
+
+    # Slot 1: LEGENDARY_TITLE (Power 50+)
+    if power >= 50:
+        parts.append(random.choice(LEGENDARY_TITLES) + ", the")
+
+    # Slot 2: QUALITY_TIER replaces LOW_TIER_PREFIX (Power 35+)
+    if power >= 35:
+        parts.append(random.choice(QUALITY_TIER))
+
+    # Slot 3: MATERIAL (Power 20+)
+    material = ""
+    if power >= 20:
+        material = random.choice(MID_TIER_MATERIAL)
+
+    # Slot 4: PREFIX (Power 10+), MATERIAL (Power 20+)
+    if power >= 10 and power < 35:
+        prefix = random.choice(LOW_TIER_PREFIX)
+        if material:
+            parts.append(f"{prefix} {material}")
+        else:
+            parts.append(prefix)
+    elif power >= 20 and material:
+        parts.append(material)
+
+    # Slot 5: BASE (always)
+    parts.append(base)
+
+    # Slot 6: SUFFIX (Power 35+)
+    if power >= 35:
+        parts.append(random.choice(HIGH_TIER_SUFFIX))
+
+    name = " ".join(parts)
+
+    return {"name": name, "slot": slot,
+            "stat": stat, "bonus": bonus, "power": power, "weight": weight, "upgrade": 0}
 
 def item_display(item):
     upg = item.get("upgrade", 0)
@@ -580,6 +682,20 @@ def generate_stat_spell(char):
 
     chosen_tier = random.choice(eligible_tiers)
     return random.choice(pool[chosen_tier])
+
+def get_max_capacity(stats):
+    return stats.get("P", 10) * 5 + stats.get("E", 10) * 2
+
+def get_inventory_weight(inventory):
+    return sum(item.get("weight", 1) for item in inventory)
+
+def item_stat_power(item):
+    return item.get("power", 1) + item.get("bonus", 0) + item.get("upgrade", 0)
+
+def item_buy_value(item, luck):
+    base = item.get("power", 1) * 5 + item.get("bonus", 0) * 3
+    upg = item.get("upgrade", 0)
+    return max(10, int((base * (1.15 ** upg)) * (1 + luck * 0.01)))
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  SCROLLABLE RADIO FRAME  (reusable widget for race/class lists)
@@ -1159,7 +1275,7 @@ class IdleRPG:
             "lvl":   1,     "exp":   0,     "exp_next": 100,
             "hp":    hp,    "max_hp": hp,
             "mp":    mp,    "max_mp": mp,
-            "gold":  0,
+            "gold":  25,
             "stats": {k: stats.get(k, 10) for k in STAT_KEYS},
             "equip": {s: None for s in EQUIP_SLOTS},
             "inventory": [],
@@ -1174,6 +1290,11 @@ class IdleRPG:
             "completed_acts": [],
             "completed_quests": [],
         }
+        self.char["equip"]["Weapon"] = {
+            "name": "Rusty Dagger", "slot": "Weapon", "stat": "P", "bonus": 1, "power": 1, "weight": 1, "upgrade": 0
+        }
+        self.char["stats"]["P"] += 1
+
         starter_spell = generate_stat_spell(self.char)
         self.char["spells"].append(starter_spell)
         self._launch()
@@ -1316,7 +1437,7 @@ class IdleRPG:
         self.hp_bar, self.hp_lbl = bar_row(fb, "HP", "HP.Horizontal.TProgressbar")
         self.mp_bar, self.mp_lbl = bar_row(fb, "MP", "MP.Horizontal.TProgressbar")
         self.enc_bar, self.enc_lbl = bar_row(fb, "ENC", "Gold.Horizontal.TProgressbar")
-        self.enc_bar["maximum"] = INVENTORY_MAX
+        self.enc_bar["maximum"] = 100
         c1.add(fb, height=110)
 
         fsp = ttk.LabelFrame(c1, text=" SPELLS/SKILLS ", padding=2)
@@ -1427,12 +1548,12 @@ class IdleRPG:
     def start_new_quest(self):
         self._check_boss_death_restart()
 
-        inv_full = len(self.char["inventory"]) >= INVENTORY_MAX
-        overdue  = (self.char["quests_completed"] > 0 and
-                    self.char["quests_completed"] % VENDOR_QUEST_INTERVAL == 0 and
-                    len(self.char["inventory"]) > 0)
-        if inv_full or overdue:
-            self._inject_vendor_quest()
+        max_cap = get_max_capacity(self.char["stats"])
+        current_weight = get_inventory_weight(self.char["inventory"])
+        encumbrance = (current_weight / max_cap * 100) if max_cap > 0 else 100
+
+        if encumbrance >= 100:
+            self._inject_market_quest()
             return
 
         if not self.char["prologue_done"]:
@@ -1498,7 +1619,7 @@ class IdleRPG:
     def _update_act_bars(self):
         if self.char["prologue_done"]:
             act = self.char["current_act"]
-            act_name = ACT_NAMES[min(act - 1, len(ACT_NAMES) - 1)]
+            act_name = get_act_name(act)
             self.act_label.config(text=f"Act {act}: {act_name}")
             self.act_pbar["maximum"] = QUESTS_PER_ACT
             self.act_pbar["value"] = self.char["act_quests_done"]
@@ -1507,17 +1628,101 @@ class IdleRPG:
             self.act_pbar["maximum"] = PROLOGUE_COMPLETE
             self.act_pbar["value"] = self.char["quests_completed"]
 
-    def _inject_vendor_quest(self):
-        inv_count = len(self.char["inventory"])
-        reason    = "Bag full!" if inv_count >= INVENTORY_MAX else "Time to sell some loot."
-        self.quest_template    = {"name": "Visit the Vendor"}
-        self.quest_steps       = ["sell"] * max(1, inv_count)
+    def _inject_market_quest(self):
+        max_cap = get_max_capacity(self.char["stats"])
+        current_weight = get_inventory_weight(self.char["inventory"])
+        encumbrance = int(100 * current_weight / max_cap) if max_cap > 0 else 100
+        self.quest_template    = {"name": "Market Day"}
+        self.quest_steps       = ["market"]
         self.quest_step_index  = 0
-        self.quest_total_steps = len(self.quest_steps)
-        self.log_story(f"[VENDOR] {reason} Heading to market.", "vendor")
-        self.quest_pbar["maximum"] = max(1, self.quest_total_steps)
+        self.quest_total_steps = 1
+        self.log_story(f"[MARKET] Encumbered ({encumbrance}%) — heading to market.", "vendor")
+        self.quest_pbar["maximum"] = 1
         self.quest_pbar["value"]   = 0
         self._advance_to_next_step()
+
+    def _apply_market_loop(self):
+        max_cap = get_max_capacity(self.char["stats"])
+        current_weight = get_inventory_weight(self.char["inventory"])
+        encumbrance = int(100 * current_weight / max_cap) if max_cap > 0 else 100
+
+        self.log_story(f"  [MARKET] Arrived at market. Encumbrance: {encumbrance}% / {max_cap} cap")
+
+        total_gold = 0
+        for item in self.char["inventory"]:
+            value = item_sell_value(item, self.char["stats"]["L"])
+            total_gold += value
+            self.log_story(f"    SOLD: {item_display(item)} -> {value} gold", "vendor")
+
+        self.char["gold"] += total_gold
+        self.log_story(f"  Total: {total_gold} gold from {len(self.char['inventory'])} items.", "vendor")
+        self.char["inventory"].clear()
+        self._update_gold()
+
+        hp_missing = self.char["max_hp"] - self.char["hp"]
+        mp_missing = self.char["max_mp"] - self.char["mp"]
+        spend = 0
+
+        if hp_missing > 0:
+            hp_heal = min(hp_missing, total_gold // 3)
+            hp_cost = hp_heal
+            spend += hp_cost
+            self.char["hp"] = min(self.char["max_hp"], self.char["hp"] + hp_heal)
+            self.log_story(f"    Healed {hp_heal} HP ({hp_cost} gold)")
+
+        if mp_missing > 0 and total_gold - spend > 0:
+            mp_heal = min(mp_missing, (total_gold - spend) // 2)
+            mp_cost = mp_heal
+            self.char["mp"] = min(self.char["max_mp"], self.char["mp"] + mp_heal)
+            self.log_story(f"    Recovered {mp_heal} MP ({mp_cost} gold)")
+            spend += mp_cost
+
+        remaining_gold = self.char["gold"]
+
+        for slot in EQUIP_SLOTS:
+            current_item = self.char["equip"].get(slot)
+            current_power = item_stat_power(current_item) if current_item else 0
+
+            best_candidate = None
+            best_candidate_power = 0
+
+            for _ in range(15):
+                candidate = generate_item(self.char["lvl"], allow_stacked_prefix=False)
+                if candidate["slot"] != slot:
+                    continue
+                candidate_power = item_stat_power(candidate)
+                if candidate_power > current_power:
+                    cost = item_buy_value(candidate, self.char["stats"]["L"])
+                    if cost <= remaining_gold and candidate_power > best_candidate_power:
+                        best_candidate = candidate
+                        best_candidate_power = candidate_power
+                        best_candidate_cost = cost
+
+            if best_candidate and best_candidate_power > current_power:
+                old_item = self.char["equip"].get(slot)
+                if old_item:
+                    self.char["stats"][old_item["stat"]] -= old_item["bonus"]
+
+                self.char["stats"][best_candidate["stat"]] += best_candidate["bonus"]
+                remaining_gold -= best_candidate_cost
+
+                old_display = item_display(old_item) if old_item else "---"
+                self.log_story(f"    UPGRADED [{slot}]: {old_display} -> {item_display(best_candidate)} ({best_candidate_cost} gold)", "vendor")
+
+                best_candidate["weight"] = 1 + (best_candidate.get("power", 1) // 5)
+                self.char["equip"][slot] = best_candidate
+
+        self.char["gold"] = remaining_gold
+        self.log_story(f"  Remaining gold: {remaining_gold}", "vendor")
+
+        new_weight = get_inventory_weight(self.char["inventory"])
+        new_encumbrance = int(100 * new_weight / max_cap) if max_cap > 0 else 0
+        self.log_story(f"  Encumbrance now: {new_encumbrance}%", "vendor")
+
+        self._update_gold()
+        self._refresh_inv_list()
+        self._update_char_panel()
+        self._refresh_equip_list()
 
     def _advance_to_next_step(self):
         if self.quest_step_index < len(self.quest_steps):
@@ -1638,6 +1843,8 @@ class IdleRPG:
                 xp = random.randint(2, 6)
                 self._gain_xp(xp)
                 self.log_story(f"    +{xp} XP")
+        elif atype == "market":
+            self._apply_market_loop()
         elif atype == "sell":
             self._sell_one_item()
 
@@ -1787,8 +1994,11 @@ class IdleRPG:
             self.char["inventory"].append(item)
             self.log_story(f"    Looted (bag): {item_display(item)}")
         self._refresh_inv_list()
-        if len(self.char["inventory"]) >= INVENTORY_MAX:
-            self.log_story(f"  [!] Bag full ({INVENTORY_MAX} items) — vendor visit queued.", "vendor")
+        max_cap = get_max_capacity(self.char["stats"])
+        current_weight = get_inventory_weight(self.char["inventory"])
+        if max_cap > 0 and current_weight >= max_cap:
+            pct = int(100 * current_weight / max_cap)
+            self.log_story(f"  [!] Encumbered ({pct}% / {max_cap}) — market visit queued.", "vendor")
 
     def _refresh_equip_list(self):
         self.equip_list.delete(0, tk.END)
@@ -1815,10 +2025,10 @@ class IdleRPG:
         else:
             self.story_tree.insert("", "end", values=("☑", "Prologue"))
             for i in range(1, self.char["current_act"]):
-                name = ACT_NAMES[min(i - 1, len(ACT_NAMES) - 1)]
+                name = get_act_name(i)
                 self.story_tree.insert("", "end", values=("☑", f"Act {i}: {name}"))
             act = self.char["current_act"]
-            name = ACT_NAMES[min(act - 1, len(ACT_NAMES) - 1)]
+            name = get_act_name(act)
             self.story_tree.insert("", "end", values=("☐", f"Act {act}: {name}"))
 
     def _refresh_hist_tree(self):
@@ -1837,7 +2047,7 @@ class IdleRPG:
 
     def _update_act_bars(self):
         if self.char["prologue_done"]:
-            self.act_label.config(text=f"Act {self.char['current_act']}: {ACT_NAMES[min(self.char['current_act']-1, len(ACT_NAMES)-1)]}")
+            self.act_label.config(text=f"Act {self.char['current_act']}: {get_act_name(self.char['current_act'])}")
             self.act_pbar["maximum"] = QUESTS_PER_ACT
             self.act_pbar["value"] = self.char["act_quests_done"]
         else:
@@ -1897,9 +2107,11 @@ class IdleRPG:
         self.mp_lbl.config(text=f"{c['mp']}/{c['max_mp']}")
         self.xp_bar["value"] = pct(c["exp"], c["exp_next"])
         self.xp_lbl.config(text=f"{c['exp']}/{c['exp_next']}")
-        enc = len(c.get("inventory", []))
+        max_cap = get_max_capacity(c["stats"])
+        current_weight = get_inventory_weight(c.get("inventory", []))
+        enc = int(100 * current_weight / max_cap) if max_cap > 0 else 0
         self.enc_bar["value"] = enc
-        self.enc_lbl.config(text=f"{enc}/{INVENTORY_MAX}")
+        self.enc_lbl.config(text=f"{current_weight}/{max_cap}")
 
     def _update_gold(self):
         self._refresh_inv_list()
