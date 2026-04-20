@@ -1,4 +1,4 @@
-# I.D.L.E.R.P.G. — Complete Edition (v1.2)
+# I.D.L.E.R.P.G. — Complete Edition (v1.5)
 
 A lightweight, feature-rich Idle RPG built with Python and Tkinter. This edition features full-screen character creation, dynamic questing, and a modular design that makes expanding the game world as simple as editing a list.
 
@@ -11,7 +11,10 @@ A lightweight, feature-rich Idle RPG built with Python and Tkinter. This edition
 - **Loot & Economy** — Manage an inventory with per-item selling, equipment upgrades, and multiple equipment slots.
 - **Spell System** — Unlock spells based on your class stats, progressing from Minor to Major to Tier II and beyond.
 - **Death & Respawn** — Face consequence with a full death sequence, ghost mechanics, and respawn system.
-- **Infinite Adventure** — 100 acts per cycle. Act 99 is "The Final Battle", Act 100 resets the universe. Level preserved, all else wipes. Repeats infinitely with Roman numerals.
+- **Infinite Adventure** — 100 acts per cycle. Act 99 is "The Final Battle", Act 100 resets the universe. Repeats infinitely with prestige titles.
+- **Encumbered Return** — At 100% encumbrance, automatically returns to town. Time proportional to quest progress. Resumes from exact step where you left off.
+- **Prestige Titles** — Build a legendary stacked title with each universe reset: "Gilded Hero of the Dawn, Cursed Squire of the Potato". Mouseover tooltip shows full history.
+- **Dev Tools** — Testing menu (Dev →) for force reset, level scaling, gold/XP injection.
 
 ## How to Play
 

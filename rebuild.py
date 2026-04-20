@@ -21,6 +21,13 @@ import random
 import json
 import sys
 import os
+import time
+
+try:
+    from achievements import ACHIEVEMENTS, ACHIEVEMENT_LOOKUP
+except ImportError:
+    ACHIEVEMENTS = []
+    ACHIEVEMENT_LOOKUP = {}
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  ▶▶  EASY EXPANSION  ◀◀  — Add to any list/dict here to expand the game
@@ -116,6 +123,44 @@ ACT_NAMES = [
     "The Iron Ascension", "The Shadow Nemesis", "The Crimson Nemesis", "The Frozen Nemesis"
 ]
 
+# ── Title System ───────────────────────────────────────────────────────────────
+TITLE_NOUNS = [
+    "Vagabond", "Squire", "Slayer", "Hero", "Champion", "Saviour", "Templar", "Paladin",
+    "Paragon", "Sentinel", "Archon", "Conqueror", "Monarch", "Sovereign", "Ascendant",
+    "Mythos", "Grandmaster", "Legend", "Acolyte", "Crusader", "Warmaster", "Justiciar",
+    "Oracle", "Harbinger", "Titan", "Deity", "Infinite", "Ethereal", "Wanderer",
+    "Vanguard", "Overlord", "Hierophant", "Demiurge", "Highness", "Arbiter",
+    "Luminary", "Warden", "Vindicator", "Gallant", "Revenant", "Dragoon",
+    "Exorcist", "Seraph", "Cherub", "Vertex", "Apex", "Omniscience", "Nephilim",
+    "Zealot", "Zero"
+]
+
+TITLE_ADJECTIVES = [
+    "Revered", "Cursed", "Blessed", "Fallen", "Exalted", "Eternal", "Infallible",
+    "Wretched", "Ancient", "Radiant", "Formidable", "Dread", "Venerated", "Gilded",
+    "Spectral", "Mythic", "Absolute", "Primal", "Cosmic", "Hallowed", "Resolute",
+    "Unyielding", "Shining", "Polished", "Automated", "Unstoppable", "Gleaming",
+    "Tarnished", "Noble", "Corrupt", "Ascended", "Diligent", "Patient", "Calculated",
+    "Relentless", "Sturdy", "Fragmented", "Wholistic", "Prime", "Void-Touched",
+    "Star-Crossed", "Iron-Bound", "Silver-Tongued", "Blood-Soaked", "Aether-Born",
+    "Light-Bearing", "Shadow-Wrapped", "Dust-Covered", "Elder"
+]
+
+TITLE_SUFFIXES = [
+    "of the Dawn", "of the Void", "of Silence", "of the Infinite", "of Dust",
+    "of Aeons", "of the Star", "of Entropy", "of the Cloud", "of the Heap",
+    "of the Stack", "of the Legacy Code", "of the Alpha Build", "of the Final Boss",
+    "of the Tutorial NPC", "of the Loading Bar", "of the Potato", "of the Sloth",
+    "of the Gnat", "of Recurrence", "of the Grind", "of the Loot", "of the Spreadsheet"
+]
+
+TITLE_PREFIXES = [
+    "Lesser", "Greater", "High", "Grand", "Master", "Uber", "Ultra", "True", "Elder",
+    "Zenith", "Prism", "Hyper", "Super", "Mega", "Alpha", "Omega", "Transcendent",
+    "Meta", "Extreme", "Ultimate", "Final", "Maximum", "Deep", "Wide", "Total",
+    "Absolute", "Infinite", "Micro", "Macro", "Beyond", "Neo", "Retro", "Pro", "Elite"
+]
+
 # 98 Total Acts (Acts 1-98 index 0-97)
 
 def to_roman(num):
@@ -132,15 +177,67 @@ def to_roman(num):
             num -= value
     return result
 
+def get_current_title(prestige_level):
+    """Returns the most recent title tier for display"""
+    if prestige_level < 0:
+        return "Vagabond"
+    pl = min(prestige_level, len(TITLE_NOUNS) - 1)
+    position = pl % 5
+    tier = pl // 5
+    tier = min(tier, len(TITLE_NOUNS) - 1)
+    
+    if position == 0:
+        return TITLE_NOUNS[tier]
+    elif position == 1:
+        adj = random.choice(TITLE_ADJECTIVES)
+        return f"{adj} {TITLE_NOUNS[tier]}"
+    elif position == 2:
+        adj = random.choice(TITLE_ADJECTIVES)
+        suff = random.choice(TITLE_SUFFIXES)
+        return f"{adj} {TITLE_NOUNS[tier]} {suff}"
+    else:  # position 3
+        pref = random.choice(TITLE_PREFIXES)
+        adj = random.choice(TITLE_ADJECTIVES)
+        suff = random.choice(TITLE_SUFFIXES)
+        return f"{pref} {adj} {TITLE_NOUNS[tier]} {suff}"
+
+def get_full_title(prestige_level):
+    """Returns the full stacked title for tooltip"""
+    if prestige_level < 0:
+        return "Vagabond"
+    
+    personas = []
+    for pl in range(prestige_level + 1):
+        position = pl % 5
+        tier = pl // 5
+        tier = min(tier, len(TITLE_NOUNS) - 1)
+        
+        if position == 0:
+            personas.append(TITLE_NOUNS[tier])
+        elif position == 1:
+            adj = random.choice(TITLE_ADJECTIVES)
+            personas.append(f"{adj} {TITLE_NOUNS[tier]}")
+        elif position == 2:
+            adj = random.choice(TITLE_ADJECTIVES)
+            suff = random.choice(TITLE_SUFFIXES)
+            personas.append(f"{adj} {TITLE_NOUNS[tier]} {suff}")
+        elif position == 3:
+            pref = random.choice(TITLE_PREFIXES)
+            adj = random.choice(TITLE_ADJECTIVES)
+            suff = random.choice(TITLE_SUFFIXES)
+            personas.append(f"{pref} {adj} {TITLE_NOUNS[tier]} {suff}")
+    
+    return ", ".join(personas)
+
 def get_act_name(act_index):
     if act_index == 99:
         return "The Final Battle"
     if act_index == 100:
         return "Resetting the Universe"
     if act_index > 100:
-        cycle = ((act_index - 101) // 98) + 2
+        cycle = ((act_index - 1) // 100) + 1
         roman = to_roman(cycle)
-        base_index = (act_index - 101) % 98
+        base_index = (act_index - 1) % 98
         return f"{ACT_NAMES[base_index]} {roman}"
     return ACT_NAMES[act_index - 1]
 
@@ -422,6 +519,23 @@ ACTION_FLAVORS = {
         "Found exactly what was needed. Maybe.",
         "Left no merchant unbothered.",
     ],
+    "find_vendor": [
+        "Asked around for the best local trader.",
+        "Followed rumors of a wealthy merchant.",
+        "Checked the usual spots in the market district.",
+        "A shopkeeper waved from across the street.",
+        "Found a merchant with decent prices.",
+        "Bargained with a roadside vendor.",
+        "Located a specialty trader.",
+    ],
+    "return_town": [
+        "Trudged back toward town.",
+        "Carried the heavy load home.",
+        "Struggled under the weight.",
+        "Made slow progress back.",
+        "Hauled everything to town.",
+        "Dragged the loot back.",
+    ],
     "ghost": [
         "Haunted the corridor in transparent indignation.",
         "Rattled chains for lack of options.",
@@ -633,7 +747,11 @@ ACTION_LABELS = {
     "return":      "Returning to town...",
     "rest":        "Resting...",
     "market":      "At the market...",
+    "find_vendor":  "Finding a vendor...",
     "sell":        "Selling at vendor...",
+    "restore":     "Restoring HP/MP...",
+    "upgrade":     "Upgrading gear...",
+    "return_town":  "Returning to town...",
     "ghost":       "Haunting the area...",
     "body":        "Finding the body...",
     "reanimate":   "Reanimating...",
@@ -1334,6 +1452,30 @@ class IdleRPG:
             "boss_attempts": 0,
             "completed_acts": [],
             "completed_quests": [],
+            "prestige_level": 0,
+            "current_title": "Vagabond",
+            "title_history": [],
+            "achievements": {
+                "unlocked": {},
+                "stats": {
+                    "gold_earned":          0,
+                    "gold_spent":           0,
+                    "enemies_killed":       0,
+                    "items_sold":           0,
+                    "quests_completed":     0,
+                    "world_resets":         0,
+                    "bosses_defeated":      0,
+                    "times_died":           0,
+                    "progress_ticks":       0,
+                    "actions_travel":       0,
+                    "actions_fight":        0,
+                    "actions_loot":         0,
+                    "actions_search":       0,
+                    "actions_rest":         0,
+                    "max_level":            1,
+                    "upgrades_total":       0,
+                }
+            },
         }
         self.char["equip"]["Weapon"] = {
             "name": "Rusty Dagger", "slot": "Weapon", "stat": "P", "bonus": 1, "power": 1, "weight": 1, "upgrade": 0
@@ -1349,6 +1491,21 @@ class IdleRPG:
         d.setdefault("deaths",           0)
         d.setdefault("spells",           [])
         d.setdefault("equip",            {s: None for s in EQUIP_SLOTS})
+        d.setdefault("prestige_level",   0)
+        d.setdefault("current_title", "Vagabond")
+        d.setdefault("title_history", [])
+        d.setdefault("achievements", {"unlocked": {}, "stats": {}})
+        # Ensure all stat keys exist for old saves
+        _ach_defaults = {
+            "gold_earned": 0, "gold_spent": 0, "enemies_killed": 0,
+            "items_sold": 0, "quests_completed": 0, "world_resets": 0,
+            "bosses_defeated": 0, "times_died": 0, "progress_ticks": 0,
+            "actions_travel": 0, "actions_fight": 0, "actions_loot": 0,
+            "actions_search": 0, "actions_rest": 0, "max_level": 1,
+            "upgrades_total": 0,
+        }
+        for k, v in _ach_defaults.items():
+            d["achievements"]["stats"].setdefault(k, v)
         self.char = d
         self._launch()
 
@@ -1399,6 +1556,14 @@ class IdleRPG:
             thememenu.add_radiobutton(label=theme_name, variable=self.theme,
                                     value=theme_name, command=self._change_theme)
         mb.add_cascade(label="Theme", menu=thememenu)
+
+        devmenu = tk.Menu(mb, tearoff=0, bg=tc("bg_panel"), fg=tc("fg_text"))
+        devmenu.add_command(label="Force Universe Reset", command=self._dev_force_reset)
+        devmenu.add_command(label="Scale to Act 100 (Level Up)", command=self._dev_scale_to_act_100)
+        devmenu.add_command(label="Add 10,000 Gold", command=self._dev_add_gold)
+        devmenu.add_command(label="Add 100 XP", command=self._dev_add_xp)
+        mb.add_cascade(label="Dev", menu=devmenu)
+
         self.root.configure(menu=mb)
 
 # paned layout
@@ -1511,12 +1676,15 @@ class IdleRPG:
         hpane.add(c3, width=260)
 
         f_story = ttk.LabelFrame(c3, text=" STORY ", padding=2)
-        self.story_tree = ttk.Treeview(f_story, columns=("S","N"), show="headings", height=8)
+        story_scroll = ttk.Scrollbar(f_story, orient="vertical")
+        story_scroll.pack(side="right", fill="y")
+        self.story_tree = ttk.Treeview(f_story, columns=("S","N"), show="headings", height=8, yscrollcommand=story_scroll.set)
         self.story_tree.heading("S", text="")
         self.story_tree.heading("N", text="Name")
         self.story_tree.column("S", width=20, anchor="center")
         self.story_tree.column("N", width=200, anchor="w")
         self.story_tree.pack(fill="both", expand=True)
+        story_scroll.config(command=self.story_tree.yview)
         c3.add(f_story, height=160)
 
         f_act_prog = ttk.LabelFrame(c3, text=" ACT PROGRESS ", padding=2)
@@ -1532,12 +1700,15 @@ class IdleRPG:
         hdr.pack(fill="x", padx=2, pady=2)
         tk.Button(hdr, text="⇅", command=self._toggle_hist_order, font=("Consolas", 8),
                 bg=BTN_DARK, fg=FG_TEXT, width=2).pack(side="left")
-        self.hist_tree = ttk.Treeview(f_hist, columns=("S","Q"), show="headings", height=6)
+        hist_scroll = ttk.Scrollbar(f_hist, orient="vertical")
+        hist_scroll.pack(side="right", fill="y")
+        self.hist_tree = ttk.Treeview(f_hist, columns=("S","Q"), show="headings", height=6, yscrollcommand=hist_scroll.set)
         self.hist_tree.heading("S", text="")
         self.hist_tree.heading("Q", text="Quest")
         self.hist_tree.column("S", width=20, anchor="center")
         self.hist_tree.column("Q", width=210)
         self.hist_tree.pack(fill="both", expand=True)
+        hist_scroll.config(command=self.hist_tree.yview)
         c3.add(f_hist, stretch="always")
 
         f_qprog = tk.Frame(c3, bg="#0a0a18")
@@ -1626,7 +1797,7 @@ class IdleRPG:
             self.char["prologue_done"] = True
             self.char["current_act"] = 1
             self.char["act_quests_done"] = 0
-            self.log_story("★ PROLOGUE COMPLETE! Act I begins...", "level")
+            self.log_story("★ PROLOGUE COMPLETE! Act 101: The Beginning II begins...", "level")
             self._regular_quest()
             return
         tmpl = PROLOGUE_QUESTS[idx]
@@ -1643,26 +1814,64 @@ class IdleRPG:
         self.log_story(f"⚠ BOSS: {tmpl['name']} appears!", "death")
         self._start_quest(tmpl)
 
+    def _start_special_quest(self, special_type):
+        if special_type == "world_reset":
+            tmpl = {"name": "Resetting the Universe",
+                    "steps": [("travel", 3), ("fight", 3), ("search", 3), ("return", 1)]}
+        else:
+            return
+        self._start_quest(tmpl)
+
     def _boss_quest(self):
         self.char["boss_attempts"] += 1
 
     def _reset_universe(self):
+        self.char["prestige_level"] = self.char.get("prestige_level", 0) + 1
+        self._ach_stat("world_resets", 1)
+        self._check_achievements()
+        pl = self.char["prestige_level"]
         self.char["current_act"] = 1
         self.char["act_quests_done"] = 0
         self.char["gold"] = 0
         self.char["inventory"] = []
         self.char["completed_quests"] = []
-        self.char["equip"] = {s: None for s in EQUIP_SLOTS}
         self.char["quests_completed"] = 0
+        self.quest_template = None
+        self.quest_steps = []
+        self.quest_step_index = 0
+        self._current_quest_name = None
         self.char["in_boss_quest"] = False
+        self.char["boss_attempts"] = 0
+        self.char["equip"] = {s: None for s in EQUIP_SLOTS}
         for slot in ["Weapon", "Shield", "Helm", "Body", "Legs", "Ring", "Amulet"]:
             self.char["equip"][slot] = None
+        
+        old_title = self.char.get("current_title", "Vagabond")
+        new_title = get_current_title(pl)
+        self.char["current_title"] = new_title
+        if "title_history" not in self.char:
+            self.char["title_history"] = []
+        self.char["title_history"].append(old_title)
+        
         self._refresh_equip_list()
         self._refresh_inv_list()
-        self.log_story("★ UNIVERSE RESET! Everything begins anew...", "level")
-        self.log_story(f"  Level {self.char['lvl']} preserved. Experience preserved.", "level")
         self._update_gold()
         self._update_act_bars()
+        self._update_char_panel()
+        self._refresh_stat_tree()
+        self._refresh_story_tree()
+        self._refresh_hist_tree()
+        
+        displayed_act = (pl * 100) + 1
+        roman_suffix = f" {to_roman(pl+1)}" if pl > 0 else ""
+        self.log_story("★ UNIVERSE RESET! Everything begins anew...", "level")
+        self.log_story(f"  Prestige Level: {pl}", "level")
+        self.log_story(f"  Previous Title: {old_title}", "level")
+        self.log_story(f"  New Title: {new_title}", "level")
+        self.log_story(f"  Act {displayed_act}: The Beginning{roman_suffix} begins!", "level")
+        
+        self._regular_quest()
+        self.run_game_loop()
 
     def _start_quest(self, tmpl):
         self.quest_template = tmpl
@@ -1684,9 +1893,11 @@ class IdleRPG:
 
     def _update_act_bars(self):
         if self.char["prologue_done"]:
+            prestige = self.char.get("prestige_level", 0)
             act = self.char["current_act"]
+            display_act = (prestige * 100) + act
             act_name = get_act_name(act)
-            self.act_label.config(text=f"Act {act}: {act_name}")
+            self.act_label.config(text=f"Act {display_act}: {act_name}")
             self.act_pbar["maximum"] = QUESTS_PER_ACT
             self.act_pbar["value"] = self.char["act_quests_done"]
         else:
@@ -1699,12 +1910,102 @@ class IdleRPG:
         current_weight = get_inventory_weight(self.char["inventory"])
         encumbrance = int(100 * current_weight / max_cap) if max_cap > 0 else 100
         self.quest_template    = {"name": "Market Day"}
-        self.quest_steps       = ["market"]
+        self.quest_steps       = ["travel", "find_vendor"]
+        for _ in range(len(self.char["inventory"])):
+            self.quest_steps.append("sell")
+        if len(self.char["inventory"]) > 0:
+            self.quest_steps.append("restore")
+        for _ in range(len(EQUIP_SLOTS)):
+            self.quest_steps.append("upgrade")
         self.quest_step_index  = 0
-        self.quest_total_steps = 1
+        self.quest_total_steps = len(self.quest_steps)
         self.log_story(f"[MARKET] Encumbered ({encumbrance}%) — heading to market.", "vendor")
-        self.quest_pbar["maximum"] = 1
+        self.quest_pbar["maximum"] = self.quest_total_steps
         self.quest_pbar["value"]   = 0
+        self._advance_to_next_step()
+
+    def _trigger_emergency_return(self):
+        if self.char.get("in_emergency_return", False):
+            return
+        self.char["in_emergency_return"] = True
+
+        current_step = self.quest_step_index
+        total_steps = self.quest_total_steps
+        steps_remaining = total_steps - current_step
+        steps_done = current_step
+
+        self.log_story(f"[!] ENCUMBERED! Returning to town...", "vendor")
+        self.log_story(f"  Return journey: {steps_remaining} steps to town.", "vendor")
+
+        self.saved_quest_state = {
+            "template": self.quest_template,
+            "steps": self.quest_steps,
+            "step_index": self.quest_step_index,
+            "total_steps": self.quest_total_steps,
+            "current_action_type": self.current_action_type,
+        }
+
+        self.quest_template = {"name": "Return to Town"}
+        return_seconds = steps_remaining * 8
+        return_steps = max(1, return_seconds // 8)
+        self.quest_steps = ["return_town"] * return_steps
+        self.quest_step_index = 0
+        self.quest_total_steps = len(self.quest_steps)
+        self.log_story(f"  [SLOW RETURN] {return_steps} steps back to town ({return_seconds}s)...", "vendor")
+
+        self.quest_pbar["maximum"] = self.quest_total_steps
+        self.quest_pbar["value"] = 0
+
+    def _complete_emergency_return(self):
+        self.log_story("  [TOWN] Made it back to town. Selling loot...", "vendor")
+
+        self.quest_template = {"name": "Market Day"}
+        self.quest_steps = ["find_vendor"]
+        for _ in range(len(self.char["inventory"])):
+            self.quest_steps.append("sell")
+        if len(self.char["inventory"]) > 0:
+            self.quest_steps.append("restore")
+        for _ in range(len(EQUIP_SLOTS)):
+            self.quest_steps.append("upgrade")
+
+        self.quest_step_index = 0
+        self.quest_total_steps = len(self.quest_steps)
+        self.quest_pbar["maximum"] = self.quest_total_steps
+        self.quest_pbar["value"] = 0
+
+        self._advance_to_next_step()
+
+    def _complete_market_after_return(self):
+        saved = self.saved_quest_state
+        steps_done = saved.get("step_index", 0)
+
+        self.log_story(f"  [RETURN] Heading back to quest...", "vendor")
+
+        rejoin_seconds = steps_done * 8
+        rejoin_steps = max(1, rejoin_seconds // 8)
+        self.quest_template = {"name": "Return to Quest"}
+        self.quest_steps = ["travel"] * rejoin_steps
+        self.quest_step_index = 0
+        self.quest_total_steps = len(self.quest_steps)
+        self.log_story(f"  [SLOW RETURN] {rejoin_steps} steps back to quest ({rejoin_seconds}s)...", "vendor")
+
+        self.quest_pbar["maximum"] = self.quest_total_steps
+        self.quest_pbar["value"] = 0
+        self._advance_to_next_step()
+
+    def _resume_original_quest(self):
+        self.log_story("  [RESUME] Resuming original quest...", "quest")
+        saved = self.saved_quest_state
+        self.quest_template = saved.get("template")
+        self.quest_steps = saved.get("steps", [])
+        self.quest_total_steps = saved.get("total_steps", 1)
+        self.quest_step_index = saved.get("step_index", 0)
+        self.char["in_emergency_return"] = False
+        self.saved_quest_state = None
+
+        self.quest_pbar["maximum"] = self.quest_total_steps
+        self.quest_pbar["value"] = self.quest_step_index
+
         self._advance_to_next_step()
 
     def _apply_market_loop(self):
@@ -1800,15 +2101,33 @@ class IdleRPG:
             self.quest_pbar["value"] = self.quest_step_index
         else:
             self.quest_pbar["value"] = self.quest_total_steps
-            self._complete_quest()
+            if self.char.get("in_emergency_return"):
+                if self.quest_template.get("name") == "Return to Town":
+                    self._complete_emergency_return()
+                elif self.quest_template.get("name") == "Market Day":
+                    self._complete_market_after_return()
+                elif self.quest_template.get("name") == "Return to Quest":
+                    self._resume_original_quest()
+                else:
+                    self._complete_quest()
+            else:
+                self._complete_quest()
 
     def _update_step_label(self):
         done  = self.quest_step_index
         total = self.quest_total_steps
-        atype = self.current_action_type or ""
+        atype = (self.current_action_type or "").replace("_", " ")
         self.task_label.config(text=f"{self.quest_template['name']}: {atype.capitalize()} ({done+1}/{total})")
 
     def _complete_quest(self):
+        if getattr(self, '_quest_completing', False):
+            return
+        self._quest_completing = True
+        
+        if self.quest_template.get("name") == "Resetting the Universe":
+            self._reset_universe()
+            self._quest_completing = False
+            return
         if self.quest_template.get("name") != "Visit the Vendor":
             self._current_quest_name = None
 
@@ -1818,15 +2137,25 @@ class IdleRPG:
             if self.char["in_boss_quest"]:
                 self.char["in_boss_quest"] = False
                 self.char["current_act"] += 1
+                self._ach_stat("bosses_defeated", 1)
                 if self.char["current_act"] == 100:
-                    self._reset_universe()
+                    pr = self.char.get("prestige_level", 0)
+                    displayed_act = (pr * 100) + 100
+                    self.log_story(f"★ BOSS DEFEATED! Act {displayed_act}: Resetting the Universe begins!", "level")
+                    self.char["act_quests_done"] = 0
+                    self._start_special_quest("world_reset")
+                    gold_r *= 3
+                    xp_r *= 2
                 else:
                     self.char["act_quests_done"] = 0
-                    self.log_story(f"★ BOSS DEFEATED! Act {self.char['current_act']} begins!", "level")
-                gold_r *= 3
-                xp_r *= 2
+                    pr = self.char.get("prestige_level", 0)
+                    displayed_act = (pr * 100) + self.char["current_act"] + 1
+                    self.log_story(f"★ BOSS DEFEATED! Act {displayed_act} begins!", "level")
+                    gold_r *= 3
+                    xp_r *= 2
             else:
                 self.char["quests_completed"] += 1
+                self._ach_stat("quests_completed", 1)
                 q_name = self.quest_template["name"]
                 if "completed_quests" not in self.char:
                     self.char["completed_quests"] = []
@@ -1835,6 +2164,7 @@ class IdleRPG:
                     self.char["act_quests_done"] += 1
 
             self.char["gold"] += gold_r
+            self._ach_stat("gold_earned", gold_r)
             self.log_story(f"[QUEST DONE] {self.quest_template['name']}", "quest")
             self.log_story(f"  Reward: {xp_r} XP, {gold_r} gold.")
             self._gain_xp(xp_r)
@@ -1842,8 +2172,9 @@ class IdleRPG:
             self._refresh_story_tree()
             self._refresh_hist_tree()
             self._update_act_bars()
-
-        self.log_story("  [SCOUT] Searching for new quest...")
+            self._update_char_panel()
+            self._check_achievements()
+            self.log_story("  [SCOUT] Searching for new quest...")
         self.pbar["value"] = 0
         self.task_label.config(text="Scouting for new quest...")
         total_delay = random.randint(600, 10000)
@@ -1858,6 +2189,7 @@ class IdleRPG:
         else:
             self.pbar["value"] = 100
             self.start_new_quest()
+            self._quest_completing = False
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  GAME LOOP
@@ -1865,26 +2197,60 @@ class IdleRPG:
     def run_game_loop(self):
         if self._dead:
             return
+        try:
+            if not self.pbar.winfo_exists():
+                return
+        except:
+            return
         speed = max(50, 250 - self.char["stats"]["D"] * 2)
         if self.pbar["value"] >= 100:
             self.pbar["value"] = 0
             self._complete_action()
             self.quest_step_index += 1
+            self._check_encumbrance()
             self._advance_to_next_step()
         else:
             self.pbar["value"] += 2
         self.root.after(speed, self.run_game_loop)
+
+    def _check_encumbrance(self):
+        if self.char.get("in_emergency_return", False):
+            return
+        try:
+            if not self.pbar.winfo_exists():
+                return
+        except:
+            return
+        max_cap = get_max_capacity(self.char["stats"])
+        current_weight = get_inventory_weight(self.char["inventory"])
+        pct = int(100 * current_weight / max_cap) if max_cap > 0 else 100
+        if pct >= 100:
+            self._trigger_emergency_return()
 
     def _complete_action(self):
         atype  = self.current_action_type
         flavor = random.choice(ACTION_FLAVORS.get(atype, ["Did something."]))
         self.log_story(f"  {flavor}")
 
+        # ── Achievement stat tracking ─────────────────────────────────────────
+        self._ach_stat("progress_ticks", 1)
+        if atype == "travel":
+            self._ach_stat("actions_travel", 1)
+        elif atype == "loot":
+            self._ach_stat("actions_loot", 1)
+        elif atype in ("search","locate","scout","investigate",
+                       "gather","escort","inspect","collect","speak"):
+            self._ach_stat("actions_search", 1)
+        elif atype == "rest":
+            self._ach_stat("actions_rest", 1)
+        # ─────────────────────────────────────────────────────────────────────
+
         if atype == "fight":
             self._resolve_fight()
         elif atype == "loot":
             gold = int(random.randint(10, 30) * (1 + self.char["stats"]["G"] * 0.02))
             self.char["gold"] += gold
+            self._ach_stat("gold_earned", gold)
             self._update_gold()
             self.log_story(f"    +{gold} gold")
             if random.random() < 0.55 + self.char["stats"]["L"] * 0.01:
@@ -1904,6 +2270,7 @@ class IdleRPG:
             if random.random() < 0.08:
                 g = random.randint(1, 6)
                 self.char["gold"] += g
+                self._ach_stat("gold_earned", g)
                 self._update_gold()
                 self.log_story(f"    Found {g} gold on the road!")
         elif atype in ("search","locate","scout","investigate",
@@ -1914,8 +2281,16 @@ class IdleRPG:
                 self.log_story(f"    +{xp} XP")
         elif atype == "market":
             self._apply_market_loop()
+        elif atype == "find_vendor":
+            self.log_story("  [VENDOR] Found a buyer.", "vendor")
         elif atype == "sell":
-            self._sell_one_item()
+            self._sell_item_only()
+        elif atype == "restore":
+            self._restore_hp_mp()
+        elif atype == "upgrade":
+            self._upgrade_gear()
+        elif atype == "return_town":
+            pass
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  COMBAT & DEATH
@@ -1937,17 +2312,22 @@ class IdleRPG:
                 self._trigger_death()
                 return
 
+        self._ach_stat("enemies_killed", 1)
+        self._ach_stat("actions_fight", 1)
         xp = random.randint(8, 20) + self.char["stats"]["I"] // 5
         self._gain_xp(xp)
         self.log_story(f"    +{xp} XP")
         if random.random() < 0.25 + self.char["stats"]["L"] * 0.01:
             self._drop_item()
+        self._check_achievements()
 
     def _trigger_death(self):
         if self._dead:
             return
         self._dead = True
         self.char["deaths"] += 1
+        self._ach_stat("times_died", 1)
+        self._check_achievements()
         for line in DEATH_SEQUENCE:
             self.log_story(line, "death")
         lost = len(self.char["inventory"])
@@ -1989,58 +2369,67 @@ class IdleRPG:
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  VENDOR — individual item selling with per-item progress animation
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    def _sell_one_item(self):
-        """Sell one item from inventory; called once per sell action step."""
+    def _sell_item_only(self):
+        """Sell one item from inventory without healing/upgrade."""
         if not self.char["inventory"]:
             self.log_story("    Nothing left to sell. Browsed awkwardly.", "vendor")
             return
         item  = self.char["inventory"].pop(0)
         value = item_sell_value(item, self.char["stats"]["L"])
         self.char["gold"] += value
+        self._ach_stat("items_sold", 1)
+        self._ach_stat("gold_earned", value)
         self._update_gold()
         self._refresh_inv_list()
         self.log_story(f"  [SOLD] {item_display(item)}  ➜  {value} gold", "vendor")
+        self._check_achievements()
 
+    def _restore_hp_mp(self):
+        """Restore HP and MP from sell proceeds. Called once after all sells."""
+        total_gold = self.char["gold"]
         hp_missing = self.char["max_hp"] - self.char["hp"]
         mp_missing = self.char["max_mp"] - self.char["mp"]
         spent = 0
 
         if hp_missing > 0:
-            hp_heal = min(hp_missing, value // 2)
+            hp_heal = min(hp_missing, total_gold // 2)
             hp_cost = hp_heal
             spent += hp_cost
             self.char["hp"] = min(self.char["max_hp"], self.char["hp"] + hp_heal)
             self.log_story(f"    Recovered {hp_heal} HP ({hp_cost} gold)")
 
-        if mp_missing > 0 and value - spent > 0:
-            mp_heal = min(mp_missing, (value - spent) // 2)
+        if mp_missing > 0 and total_gold - spent > 0:
+            mp_heal = min(mp_missing, (total_gold - spent) // 2)
             mp_cost = mp_heal
             self.char["mp"] = min(self.char["max_mp"], self.char["mp"] + mp_heal)
             self.log_story(f"    Recovered {mp_heal} MP ({mp_cost} gold)")
             spent += mp_cost
 
         self.char["gold"] -= spent
-        remaining = self.char["gold"]
+        self._update_gold()
+        self._update_char_panel()
+        self.log_story(f"  Remaining: {self.char['gold']} gold", "vendor")
 
+    def _upgrade_gear(self):
+        """Try to upgrade one equipment slot. Called per upgrade step."""
         for slot in EQUIP_SLOTS:
-            if remaining <= 0:
-                break
             item = self.char["equip"].get(slot)
             if not item:
                 continue
+            current_upgrade = item.get("upgrade", 0)
             cost = upgrade_cost(item)
-            if remaining >= cost:
-                remaining -= cost
-                item["upgrade"] = item.get("upgrade", 0) + 1
+            if self.char["gold"] >= cost:
+                self.char["gold"] -= cost
+                item["upgrade"] = current_upgrade + 1
                 item["bonus"] = item.get("bonus", 1) + 1
                 item["power"] = item.get("power", 1) + 1
-                self.log_story(f"    UPGRADE: {item_display(item)} now +{item['upgrade']}")
-
-        self.char["gold"] = remaining
-        self._update_gold()
-        self._refresh_inv_list()
-        self._update_char_panel()
-        self._refresh_equip_list()
+                self._ach_stat("upgrades_total", 1)
+                self.log_story(f"    UPGRADED [{slot}]: {item_display(item)} +{item['upgrade']} ({cost} gold)", "vendor")
+                self._update_gold()
+                self._refresh_equip_list()
+                self._update_char_panel()
+                return
+        self.log_story("    No upgrades available.", "vendor")
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  ITEMS
@@ -2089,16 +2478,27 @@ class IdleRPG:
 
     def _refresh_story_tree(self):
         self.story_tree.delete(*self.story_tree.get_children())
+        pr = self.char.get("prestige_level", 0)
         if not self.char["prologue_done"]:
             self.story_tree.insert("", "end", values=("☐", "Prologue"))
         else:
             self.story_tree.insert("", "end", values=("☑", "Prologue"))
+            for prior_pr in range(pr):
+                for i in range(1, 100):
+                    displayed_act = (prior_pr * 100) + i
+                    name = get_act_name(displayed_act)
+                    self.story_tree.insert("", "end", values=("☑", f"Act {displayed_act}: {name}"))
+                displayed_act = (prior_pr * 100) + 100
+                name = "Resetting the Universe"
+                self.story_tree.insert("", "end", values=("☑", f"Act {displayed_act}: {name}"))
             for i in range(1, self.char["current_act"]):
-                name = get_act_name(i)
-                self.story_tree.insert("", "end", values=("☑", f"Act {i}: {name}"))
+                displayed_act = (pr * 100) + i
+                name = get_act_name(displayed_act)
+                self.story_tree.insert("", "end", values=("☑", f"Act {displayed_act}: {name}"))
             act = self.char["current_act"]
-            name = get_act_name(act)
-            self.story_tree.insert("", "end", values=("☐", f"Act {act}: {name}"))
+            displayed_act = (pr * 100) + act
+            name = get_act_name(displayed_act)
+            self.story_tree.insert("", "end", values=("☐", f"Act {displayed_act}: {name}"))
 
     def _refresh_hist_tree(self):
         self.hist_tree.delete(*self.hist_tree.get_children())
@@ -2114,16 +2514,6 @@ class IdleRPG:
         self._hist_descending = not self._hist_descending
         self._refresh_hist_tree()
 
-    def _update_act_bars(self):
-        if self.char["prologue_done"]:
-            self.act_label.config(text=f"Act {self.char['current_act']}: {get_act_name(self.char['current_act'])}")
-            self.act_pbar["maximum"] = QUESTS_PER_ACT
-            self.act_pbar["value"] = self.char["act_quests_done"]
-        else:
-            self.act_label.config(text="Prologue")
-            self.act_pbar["maximum"] = PROLOGUE_COMPLETE
-            self.act_pbar["value"] = self.char["quests_completed"]
-
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  XP / LEVELLING
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2137,6 +2527,11 @@ class IdleRPG:
     def _level_up(self):
         self.char["lvl"]      += 1
         self.char["exp_next"]  = self.char["lvl"] * 100
+        # Track max level reached across all resets
+        ach_stats = self.char.get("achievements", {}).get("stats", {})
+        if self.char["lvl"] > ach_stats.get("max_level", 0):
+            self._ach_stat_set("max_level", self.char["lvl"])
+        self._check_achievements()
         pick_keys = []
         if self.char["lvl"] % 2 == 0:
             pick_keys = random.sample(STAT_KEYS, 2)
@@ -2164,11 +2559,17 @@ class IdleRPG:
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     def _update_char_panel(self):
         c = self.char
+        pl = c.get("prestige_level", 0)
+        current_title = c.get("current_title", "Vagabond")
+        title_history = c.get("title_history", [])
+        full_title = ", ".join(title_history + [current_title]) if title_history else current_title
         self.info_label.config(
             text=(f"Name: {c['name']}\n"
+                  f"Title: {current_title}\n"
                   f"Race: {c['race']}\n"
                   f"Class: {c['class']}\n"
-                  f"Lv: {c['lvl']} | Deaths: {c['deaths']}"))
+                  f"Lv: {c['lvl']} | Prestige: {pl}"))
+        
         def pct(v, m): return int(100 * v / m) if m else 0
         self.hp_bar["value"] = pct(c["hp"],  c["max_hp"])
         self.hp_lbl.config(text=f"{c['hp']}/{c['max_hp']}")
@@ -2181,6 +2582,63 @@ class IdleRPG:
         enc = int(100 * current_weight / max_cap) if max_cap > 0 else 0
         self.enc_bar["value"] = enc
         self.enc_lbl.config(text=f"{current_weight}/{max_cap}")
+
+    def _show_title_tooltip(self, event, full_title):
+        if hasattr(self, '_title_tip') and self._title_tip.winfo_exists():
+            self._title_tip.destroy()
+        c = self.char
+        title_history = c.get("title_history", [])
+        tooltip_text = ", ".join(title_history) if title_history else "No previous titles"
+        self._title_tip = tk.Toplevel(self.root)
+        self._title_tip.wm_overrideredirect(True)
+        self._title_tip.wm_geometry(f"+{event.x_root+15}+{event.y_root+15}")
+        tk.Label(self._title_tip, text=tooltip_text, font=("Consolas", 8),
+                bg="#1a1a2e", fg="#00ff00", wraplength=400).pack()
+        self._title_tip.update_idletasks()
+
+    def _hide_title_tooltip(self):
+        if hasattr(self, '_title_tip') and self._title_tip.winfo_exists():
+            self._title_tip.destroy()
+
+    def _dev_force_reset(self):
+        if messagebox.askyesno("Dev: Force Reset", "Force universe reset now?"):
+            self.char["prologue_done"] = True
+            self.char["current_act"] = 100
+            self.char["act_quests_done"] = 0
+            self.char["quests_completed"] = 100
+            pr = self.char.get("prestige_level", 0)
+            displayed_act = (pr * 100) + 100
+            self.log_story(f"[DEV] Act {displayed_act}: Resetting the Universe begins!", "level")
+            self._refresh_story_tree()
+            self._update_act_bars()
+            self._update_char_panel()
+            self._start_special_quest("world_reset")
+            self.run_game_loop()
+
+    def _dev_scale_to_act_100(self):
+        target_lvl = 100
+        current_lvl = self.char["lvl"]
+        self.char["lvl"] = target_lvl
+        self.char["exp"] = 0
+        self.char["exp_next"] = target_lvl * 100 + 50
+        self.char["hp"] = 50 + (target_lvl * 10)
+        self.char["max_hp"] = 50 + (target_lvl * 10)
+        self.char["mp"] = 50 + (target_lvl * 5)
+        self.char["max_mp"] = 50 + (target_lvl * 5)
+        for stat in STAT_KEYS:
+            self.char["stats"][stat] = min(30, self.char["stats"][stat] + target_lvl - current_lvl)
+        self._update_char_panel()
+        self._update_gold()
+        self.log_story(f"[DEV] Scaled to Level {target_lvl}!", "level")
+
+    def _dev_add_gold(self):
+        self.char["gold"] += 10000
+        self._update_gold()
+        self.log_story("[DEV] +10,000 gold!", "vendor")
+
+    def _dev_add_xp(self):
+        self._gain_xp(100)
+        self.log_story("[DEV] +100 XP!", "level")
 
     def _update_gold(self):
         self._refresh_inv_list()
@@ -2202,6 +2660,145 @@ class IdleRPG:
     def _refresh_stat_tree(self):
         for s in STAT_KEYS:
             self.stat_tree.item(s, values=(s, self.char["stats"][s], STAT_DEFS[s][0]))
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    #  ACHIEVEMENTS
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    def _ach_stat(self, key, amount):
+        """Increment an achievement stat by amount."""
+        try:
+            self.char["achievements"]["stats"][key] = \
+                self.char["achievements"]["stats"].get(key, 0) + amount
+        except (KeyError, TypeError):
+            pass
+
+    def _ach_stat_set(self, key, value):
+        """Set an achievement stat to a specific value (for max tracking)."""
+        try:
+            self.char["achievements"]["stats"][key] = value
+        except (KeyError, TypeError):
+            pass
+
+    def _check_achievements(self):
+        """Check all achievements and unlock any newly met thresholds."""
+        if not ACHIEVEMENTS:
+            return
+        unlocked = self.char.get("achievements", {}).get("unlocked", {})
+        stats    = self.char.get("achievements", {}).get("stats", {})
+        newly_unlocked = []
+
+        for ach in ACHIEVEMENTS:
+            ach_id = ach["id"]
+            if ach_id in unlocked:
+                continue  # Already got it
+
+            # Standard threshold check
+            if "stat" in ach and "threshold" in ach:
+                current = stats.get(ach["stat"], 0)
+                if current >= ach["threshold"]:
+                    newly_unlocked.append(ach)
+                    continue
+
+            # Special condition checks
+            if ach.get("special") == "all_slots_filled":
+                equip = self.char.get("equip", {})
+                if all(equip.get(slot) is not None for slot in EQUIP_SLOTS):
+                    newly_unlocked.append(ach)
+
+        for ach in newly_unlocked:
+            unlocked[ach["id"]] = time.time()
+            self.char["achievements"]["unlocked"] = unlocked
+            self.log_story(f"🏆 ACHIEVEMENT UNLOCKED: {ach['name']}!", "level")
+            self._show_achievement_toast(ach)
+
+    def _show_achievement_toast(self, ach):
+        """Show a brief toast popup in the bottom-right corner."""
+        try:
+            toast = tk.Toplevel(self.root)
+            toast.wm_overrideredirect(True)
+            toast.attributes("-topmost", True)
+            toast.attributes("-alpha", 0.0)
+
+            # Position: bottom-right of the main window
+            self.root.update_idletasks()
+            rx = self.root.winfo_rootx()
+            ry = self.root.winfo_rooty()
+            rw = self.root.winfo_width()
+            rh = self.root.winfo_height()
+            w, h = 300, 64
+            x = rx + rw - w - 16
+            y = ry + rh - h - 16
+            toast.wm_geometry(f"{w}x{h}+{x}+{y}")
+
+            # Dark styled frame
+            frame = tk.Frame(toast, bg="#1a1a2e", bd=2, relief="solid",
+                             highlightbackground="#ffd700", highlightthickness=2)
+            frame.pack(fill="both", expand=True)
+
+            tk.Label(frame, text="🏆  ACHIEVEMENT UNLOCKED",
+                     font=("Consolas", 8, "bold"),
+                     bg="#1a1a2e", fg="#ffd700").pack(anchor="w", padx=8, pady=(6,0))
+            tk.Label(frame, text=ach["name"],
+                     font=("Consolas", 10, "bold"),
+                     bg="#1a1a2e", fg="#ffffff").pack(anchor="w", padx=8)
+            tk.Label(frame, text=ach.get("desc", ""),
+                     font=("Consolas", 7),
+                     bg="#1a1a2e", fg="#aaaaaa").pack(anchor="w", padx=8)
+
+            # Queue any waiting toasts so they don't overlap
+            if not hasattr(self, '_toast_queue'):
+                self._toast_queue = []
+            self._toast_queue.append(toast)
+
+            if len(self._toast_queue) == 1:
+                self._animate_toast_in(toast, 0.0)
+
+        except Exception:
+            pass  # Never crash the game over a toast
+
+    def _animate_toast_in(self, toast, alpha):
+        """Fade in, hold, then fade out the toast."""
+        try:
+            if not toast.winfo_exists():
+                self._next_toast()
+                return
+            if alpha < 1.0:
+                alpha = min(alpha + 0.08, 1.0)
+                toast.attributes("-alpha", alpha)
+                self.root.after(20, lambda: self._animate_toast_in(toast, alpha))
+            else:
+                # Hold for 2.8 seconds then fade out
+                self.root.after(2800, lambda: self._animate_toast_out(toast, 1.0))
+        except Exception:
+            self._next_toast()
+
+    def _animate_toast_out(self, toast, alpha):
+        """Fade the toast out then destroy it."""
+        try:
+            if not toast.winfo_exists():
+                self._next_toast()
+                return
+            if alpha > 0.0:
+                alpha = max(alpha - 0.08, 0.0)
+                toast.attributes("-alpha", alpha)
+                self.root.after(20, lambda: self._animate_toast_out(toast, alpha))
+            else:
+                toast.destroy()
+                self._next_toast()
+        except Exception:
+            self._next_toast()
+
+    def _next_toast(self):
+        """Pop the finished toast and start the next one if queued."""
+        try:
+            if hasattr(self, '_toast_queue') and self._toast_queue:
+                self._toast_queue.pop(0)
+                if self._toast_queue:
+                    next_toast = self._toast_queue[0]
+                    self._animate_toast_in(next_toast, 0.0)
+        except Exception:
+            pass
 
     def log_story(self, msg, tag="normal"):
         self.story_text.config(state="normal")
