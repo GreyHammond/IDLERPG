@@ -1,4 +1,4 @@
-# I.D.L.E.R.P.G. — Complete Edition (v1.5)
+# I.D.L.E.R.P.G. — Complete Edition (v1.3)
 
 A lightweight, feature-rich Idle RPG built with Python and Tkinter. This edition features full-screen character creation, dynamic questing, and a modular design that makes expanding the game world as simple as editing a list.
 
