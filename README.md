@@ -1,4 +1,4 @@
-# I.D.L.E.R.P.G. — Complete Edition
+# I.D.L.E.R.P.G. — Complete Edition (v1.2)
 
 A lightweight, feature-rich Idle RPG built with Python and Tkinter. This edition features full-screen character creation, dynamic questing, and a modular design that makes expanding the game world as simple as editing a list.
 
@@ -11,6 +11,7 @@ A lightweight, feature-rich Idle RPG built with Python and Tkinter. This edition
 - **Loot & Economy** — Manage an inventory with per-item selling, equipment upgrades, and multiple equipment slots.
 - **Spell System** — Unlock spells based on your class stats, progressing from Minor to Major to Tier II and beyond.
 - **Death & Respawn** — Face consequence with a full death sequence, ghost mechanics, and respawn system.
+- **Infinite Adventure** — 100 acts per cycle. Act 99 is "The Final Battle", Act 100 resets the universe. Level preserved, all else wipes. Repeats infinitely with Roman numerals.
 
 ## How to Play
 
@@ -48,6 +49,7 @@ The entire game is designed to be modded without touching any logic. Every piece
 | Item suffixes | `HIGH_TIER_SUFFIX` | `"of the Void"`, `"of Embers"` |
 | Item quality | `QUALITY_TIER` | `"Vorpal"`, `"Ruinous"` |
 | Legendary titles | `LEGENDARY_TITLES` | `"The Harbinger"` |
+| Act names | `ACT_NAMES` | `"The Shattered Dawn"` (98 unique names) |
 | Action flavor text | `ACTION_FLAVORS` | `"fight": ["Punched a goon."]` |
 | Spells | `TIERED_SPELLS` | `"Minor": ["Magic Bolt"]` |
 

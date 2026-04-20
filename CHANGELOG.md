@@ -2,7 +2,32 @@
 
 All notable changes to I.D.L.E.R.P.G. will be documented in this file.
 
-## [Unreleased]
+## v1.2 - Ascension
+
+### Added
+- **Expanded Act System** - Now supports 100 acts per cycle:
+  - Acts 1-98: Regular questing with 98 unique narrative act names
+  - Act 99: "The Final Battle" - harder boss (25 fights, 6 loot)
+  - Act 100: "Resetting the Universe" - resets gold, inventory, equipment
+  - Acts 101+: Continues with Roman numeral cycles (II, III, IV...)
+
+- **Roman Numeral Support** - `to_roman()` function for cycle numbering
+
+- **Universe Reset** - `_reset_universe()` method:
+  - Keeps: Level, XP, spells
+  - Resets: Gold, Inventory, Equipment, Quests completed, Act progress
+
+### Changed
+- **get_act_name()** - Updated to handle 99/100/101+ acts with proper naming:
+  - Act 99: "The Final Battle"
+  - Act 100: "Resetting the Universe"
+  - Act 101+: Uses Roman numerals (The Beginning II, etc.)
+
+- **Boss Quest Cycling** - Bosses now cycle through BOSS_QUESTS for acts 1-98
+
+---
+
+## v1.1 - Age of Artifacts
 
 ### Added
 - **Grammar-Based Item Naming System** - Items now build names dynamically based on power level:

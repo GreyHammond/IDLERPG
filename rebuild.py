@@ -91,13 +91,58 @@ QUESTS_PER_ACT = 10
 ACT_NAMES = [
     "The Beginning", "The Journey", "The Trials", "The Dark Woods",
     "The Rising Shadow", "The Lost City", "The Ancient Evil", "The Final Stand",
-    "The End of Days", "The New Era"
+    "The End of Days", "The New Era",
+    "The Shattered Dawn", "The Broken Chains", "The Forgotten Path", "The Echoing Void",
+    "The Crimson Skies", "The Iron Dominion", "The Falling Stars", "The Eternal Night",
+    "The Azure Horizon", "The Sunken Kingdom", "The Whispering Tomb", "The Frozen Crown",
+    "The Scorched Earth", "The Crystal Spire", "The Hidden Realm", "The Dying Light",
+    "The Rusted Throne", "The Golden Age", "The Silent Storm", "The Burning Sea",
+    "The Jagged Peaks", "The Hollow Mountain", "The Crimson Tide", "The Wandering Spirit",
+    "The Eternal Flame", "The Shadow Realm", "The Frozen Wastes", "The Wandering Star",
+    "The Ashen Wind", "The Crystal Cave", "The Forgotten Gate", "The Dying Kingdom",
+    "The Iron Will", "The Silver Moon", "The Crimson Storm", "The Midnight Sun",
+    "The Ancient Oath", "The Broken Mirror", "The Fiery Descent", "The Frozen Heart",
+    "The Crimson Crown", "The Shadow King", "The Eternal Sorrow", "The Dark Eclipse",
+    "The Radiant Dawn", "The Crimson Moon", "The Iron Fortress", "The Vanishing Point",
+    "The Crimson Pact", "The Shadow Empire", "The Eternal Chaos", "The Dying Dawn",
+    "The Iron Crown", "The Shadow Realm", "The Eternal Dream", "The Dark Convergence",
+    "The Frozen Throne", "The Crimson King", "The Iron Covenant", "The Shadow War",
+    "The Eternal Truth", "The Dark Awakening", "The Iron Rebellion", "The Shadow Eclipse",
+    "The Crimson Covenant", "The Frozen Empire", "The Iron Conquest", "The Shadow Dawn",
+    "The Eternal Vow", "The Dark Rebirth", "The Iron Legacy", "The Shadow Requiem",
+    "The Crimson Requiem", "The Frozen Dawn", "The Iron Awakening", "The Shadow Genesis",
+    "The Eternal Genesis", "The Dark Genesis", "The Iron Genesis", "The Shadow Ascension",
+    "The Crimson Ascension", "The Frozen Ascension", "The Eternal Crown", "The Dark Crown",
+    "The Iron Ascension", "The Shadow Nemesis", "The Crimson Nemesis", "The Frozen Nemesis"
 ]
 
+# 98 Total Acts (Acts 1-98 index 0-97)
+
+def to_roman(num):
+    if num <= 0:
+        return ""
+    roman_numerals = [
+        (100, ""), (90, "XC"), (50, "L"), (40, "XL"), (10, "X"),
+        (9, "IX"), (5, "V"), (4, "IV"), (1, "I")
+    ]
+    result = ""
+    for value, numeral in roman_numerals[1:]:
+        while num >= value:
+            result += numeral
+            num -= value
+    return result
+
 def get_act_name(act_index):
-    if act_index <= len(ACT_NAMES):
-        return ACT_NAMES[act_index - 1]
-    return "Restarting the Universe"
+    if act_index == 99:
+        return "The Final Battle"
+    if act_index == 100:
+        return "Resetting the Universe"
+    if act_index > 100:
+        cycle = ((act_index - 101) // 98) + 2
+        roman = to_roman(cycle)
+        base_index = (act_index - 101) % 98
+        return f"{ACT_NAMES[base_index]} {roman}"
+    return ACT_NAMES[act_index - 1]
 
 # ── Boss Quest Templates ────────────────────────────────────────────────────
 BOSS_QUESTS = [
@@ -1590,13 +1635,34 @@ class IdleRPG:
     def _start_boss(self):
         self.char["in_boss_quest"] = True
         self.char["boss_attempts"] = 0
-        act = min(self.char["current_act"], len(BOSS_QUESTS) - 1)
-        tmpl = BOSS_QUESTS[act]
+        if self.char["current_act"] == 99:
+            tmpl = {"name": "The Final Battle", "steps": [("travel", 8), ("fight", 25), ("loot", 6), ("return", 1)]}
+        else:
+            act_idx = (self.char["current_act"] - 1) % len(BOSS_QUESTS)
+            tmpl = BOSS_QUESTS[act_idx]
         self.log_story(f"⚠ BOSS: {tmpl['name']} appears!", "death")
         self._start_quest(tmpl)
 
     def _boss_quest(self):
         self.char["boss_attempts"] += 1
+
+    def _reset_universe(self):
+        self.char["current_act"] = 1
+        self.char["act_quests_done"] = 0
+        self.char["gold"] = 0
+        self.char["inventory"] = []
+        self.char["completed_quests"] = []
+        self.char["equip"] = {s: None for s in EQUIP_SLOTS}
+        self.char["quests_completed"] = 0
+        self.char["in_boss_quest"] = False
+        for slot in ["Weapon", "Shield", "Helm", "Body", "Legs", "Ring", "Amulet"]:
+            self.char["equip"][slot] = None
+        self._refresh_equip_list()
+        self._refresh_inv_list()
+        self.log_story("★ UNIVERSE RESET! Everything begins anew...", "level")
+        self.log_story(f"  Level {self.char['lvl']} preserved. Experience preserved.", "level")
+        self._update_gold()
+        self._update_act_bars()
 
     def _start_quest(self, tmpl):
         self.quest_template = tmpl
@@ -1752,8 +1818,11 @@ class IdleRPG:
             if self.char["in_boss_quest"]:
                 self.char["in_boss_quest"] = False
                 self.char["current_act"] += 1
-                self.char["act_quests_done"] = 0
-                self.log_story(f"★ BOSS DEFEATED! Act {self.char['current_act']} begins!", "level")
+                if self.char["current_act"] == 100:
+                    self._reset_universe()
+                else:
+                    self.char["act_quests_done"] = 0
+                    self.log_story(f"★ BOSS DEFEATED! Act {self.char['current_act']} begins!", "level")
                 gold_r *= 3
                 xp_r *= 2
             else:
