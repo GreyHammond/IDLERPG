@@ -2,8 +2,6 @@
 
 All notable changes to I.D.L.E.R.P.G. will be documented in this file.
 
-## [Unreleased]
-
 ### Added
 - **Grammar-Based Item Naming System** - Items now build names dynamically based on power level:
   - Power 1-9: `[Base]` → "Dagger"
