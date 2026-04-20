@@ -7,14 +7,12 @@ A lightweight, feature-rich Idle RPG built with Python and Tkinter. This edition
 - **Character Customization** — Choose from 20 races and 20 classes with unique stat modifiers. Roll your own stats using the classic 4d6 drop-lowest method, or let the game generate a random name for you.
 - **Persistent Progress** — Full save/load functionality means your hero's journey continues exactly where you left off.
 - **Dynamic Gameplay** — Colored progress bars, dice-rolling mechanics, and multi-stage quests keep gameplay engaging.
-- **Loot & Economy** — Manage an inventory with per-item selling, equipment upgrades, and a dynamic loot system with 30+ item prefixes and multiple equipment slots.
+- **Grammar-Based Loot** — Dynamic item naming that builds legendary names as power increases: "Rusty Dagger" → "Polished Steel Dagger" → "The Harbinger, the Vorpal Steel Dagger of Whispers".
+- **Loot & Economy** — Manage an inventory with per-item selling, equipment upgrades, and multiple equipment slots.
 - **Spell System** — Unlock spells based on your class stats, progressing from Minor to Major to Tier II and beyond.
 - **Death & Respawn** — Face consequence with a full death sequence, ghost mechanics, and respawn system.
 
 ## How to Play
-
-## Screenshots
-![I.D.L.E.R.P.G.](https://i.imgur.com/0d4bdvs.png)
 
 ### Windows (No Installation Required)
 
@@ -44,8 +42,12 @@ The entire game is designed to be modded without touching any logic. Every piece
 | Prologue quests | `PROLOGUE_QUESTS` | `{"name": "...", "steps": [...]}` |
 | Main quests | `QUEST_TEMPLATES` | `{"name": "...", "steps": [...]}` |
 | Boss quests | `BOSS_QUESTS` | `{"name": "...", "steps": [...]}` |
-| Item prefixes | `ITEM_PREFIXES` | `"Atomic"` |
 | Item bases | `ITEM_BASES` | `"Laser Sword"` (in "Weapon" list) |
+| Item conditions | `LOW_TIER_PREFIX` | `"Rusty"`, `"Polished"` |
+| Item materials | `MID_TIER_MATERIAL` | `"Steel"`, `"Mithril"` |
+| Item suffixes | `HIGH_TIER_SUFFIX` | `"of the Void"`, `"of Embers"` |
+| Item quality | `QUALITY_TIER` | `"Vorpal"`, `"Ruinous"` |
+| Legendary titles | `LEGENDARY_TITLES` | `"The Harbinger"` |
 | Action flavor text | `ACTION_FLAVORS` | `"fight": ["Punched a goon."]` |
 | Spells | `TIERED_SPELLS` | `"Minor": ["Magic Bolt"]` |
 
@@ -89,7 +91,11 @@ Quests use a simple step system: each tuple is `(action_type, count)`. Available
 
 ## Screenshots
 
-> *(Add your screenshots here)*
+![I.D.L.E.R.P.G.](https://i.imgur.com/q3hhB53.png)
+
+## Changelog
+
+For detailed release notes and update history, see [CHANGELOG.md](CHANGELOG.md).
 
 ## Tech Stack
 
