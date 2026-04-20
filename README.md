@@ -13,6 +13,9 @@ A lightweight, feature-rich Idle RPG built with Python and Tkinter. This edition
 
 ## How to Play
 
+## Screenshots
+![I.D.L.E.R.P.G.](https://i.imgur.com/q3hhB53.png)
+
 ### Windows (No Installation Required)
 
 Download `IDLERPG.exe` from the [latest Releases](https://github.com/your-repo/releases) page. Run it directly — no Python needed.
