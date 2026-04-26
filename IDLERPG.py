@@ -251,8 +251,8 @@ BOSS_QUESTS = [
     {"name": "The Void Incarnate", "steps": [("travel", 3), ("fight", 8), ("loot", 2), ("return", 1)]},
     {"name": "The World Eater", "steps": [("travel", 4), ("fight", 10), ("loot", 3), ("return", 1)]},
     {"name": "The Final Nemesis", "steps": [("travel", 5), ("fight", 12), ("loot", 3), ("return", 1)]},
-    {"name": "The End of Everything", "steps": [("travel", 6), ("fight", 15), ("loot", 4), ("return", 1)]},
-    {"name": "The Last Battle", "steps": [("travel", 8), ("fight", 20), ("loot", 5), ("return", 1)]},
+    {"name": "The End of Everything", "steps": [("travel", 8), ("fight", 15), ("loot", 4), ("return", 1)]},
+    {"name": "The Last Battle", "steps": [("travel", 5), ("scout", 1), ("fight", 5), ("loot", 5), ("investigate", 2), ("purify", 10), ("return", 1)]},
 ]
 
 # ── Quest Templates ───────────────────────────────────────���───────────────────
@@ -564,6 +564,15 @@ ACTION_FLAVORS = {
         "Re-materialized near a familiar-looking fountain.",
         "Returned to the world of the living. Gross...",
     ],
+    "transmute": [
+        "Drew arcane sigils in the air above the item.",
+        "Whispered the words of unmaking. Something gleamed.",
+        "The item dissolved into a shower of gold flecks.",
+        "Focused intensely. The item collapsed into value.",
+        "Transmuted the essence of the item into coin.",
+        "The runes lit up. The item became gold.",
+        "An alchemical gesture — and the bag got lighter.",
+    ],
 }
 
 # ── Item Generation ────────────────────────────────────────────────────────────
@@ -590,7 +599,10 @@ LOW_TIER_PREFIX = [
     "Weighted", "Reinforced", "Tempered", "Pitted", "Blunted", "Sooty", "Dented",
     "Notched", "Corroded", "Oiled", "Balanced", "Reliable", "Sturdy", "Heavy",
     "Lightweight", "Scratched", "Chipped", "Splintered", "Grubby", "Mended",
-    "Serviceable", "Glittering", "Pristine", "Brilliant", "Cold-Forged"
+    "Serviceable", "Glittering", "Pristine", "Brilliant", "Cold-Forged",
+    "Warped", "Fractured", "Loose", "Ragged", "Tarnished", "Scuffed", "Faded",
+    "Dusty", "Grimed", "Rough", "Uneven", "Patchwork", "Repaired", "Makeshift",
+    "Weathered", "Cracked", "Stained", "Hardened", "Overused", "Wicked"
 ]
 
 MID_TIER_MATERIAL = [
@@ -598,7 +610,11 @@ MID_TIER_MATERIAL = [
     "Ebonsteel", "Crystal", "Silver", "Cold-Iron", "Meteorite", "Cobalt", "Titanium",
     "Electrum", "Ghost-Wood", "Sun-Glass", "Void-Stone", "Living-Wood", "Darkscale",
     "Aether-Silk", "Star-Metal", "Orichalcum", "Plasteel", "Brimstone", "Moonsilver",
-    "Deep-Platinum", "Runite", "Dwarven-Gold", "Ancient-Oak"
+    "Deep-Platinum", "Runite", "Dwarven-Gold", "Ancient-Oak",
+    "Blacksteel", "Blood-Iron", "Stormsteel", "Frost-Iron", "Emberstone", "Gravebone",
+    "Nightglass", "Soulsteel", "Ironwood", "Sky-Crystal", "Hellforged Steel",
+    "Ashen Bronze", "Doomsteel", "Spiritwood", "Wyrmscale", "Netherite",
+    "Gloomstone", "Starforged Iron", "Duskwrought Steel", "Runebound Silver"
 ]
 
 HIGH_TIER_SUFFIX = [
@@ -608,7 +624,12 @@ HIGH_TIER_SUFFIX = [
     "of Unending Night", "of the Sun-Eater", "of Woe", "of Infinite Regret",
     "of the Comet", "of Raging Tides", "of the Blood Moon", "of Ruin",
     "of Fallen Empires", "of the Silent One", "of Eternal Rest", "of Catastrophe",
-    "of Malice", "of Grace", "of Dread", "of the Outer Planes"
+    "of Malice", "of Grace", "of Dread", "of the Outer Planes",
+    "of Shattered Stars", "of the Abyss", "of Final Breath", "of Endless Hunger",
+    "of the Black Sun", "of Ash and Bone", "of Crimson Skies", "of the Last Dawn",
+    "of Broken Oaths", "of Hollow Souls", "of the Dying World", "of Grim Tides",
+    "of the Veil", "of Withering Flame", "of Starfall", "of the Deep Void",
+    "of Silent Screams", "of the Iron Judgment", "of Gilded Ruin", "of Twilight’s End"
 ]
 
 QUALITY_TIER = [
@@ -616,19 +637,69 @@ QUALITY_TIER = [
     "Mythic", "Hallowed", "Blighted", "Shattered", "Transcendent", "Cursed",
     "Anomalous", "God-Slaying", "World-Ender", "Apostate", "Vengeful", "Ineffable",
     "Sovereign", "Singularity", "Apex", "Omniscient", "Radiant", "Fabled",
-    "Ethereal", "Infinite", "Doomed", "Unstoppable", "Abyssal"
+    "Ethereal", "Infinite", "Doomed", "Unstoppable", "Abyssal",
+    "Mythforged", "Ascendant", "Paragon", "Empyrean", "Oblivion-Touched",
+    "Star-Blessed", "Void-Bound", "Doomforged", "God-Touched", "Unbound",
+    "Everlasting", "Cataclysmic", "Fatewoven", "Chrono-Broken", "Eclipse-Born",
+    "Nether-Touched", "Heavenfall", "Gravebound", "Stormforged", "Runeblessed"
 ]
+
 
 LEGENDARY_TITLES = [
     "The Harbinger", "Last Light", "Doomgiver", "The End", "Hope's Edge",
     "World-Breaker", "The Void", "Eternal Dawn", "Silence", "The Final Word",
-    "Breaking Point", "Kindling for the Pyre", "Descent Into Madness",
-    "The Bench", "Shattered Promise", "Grave-Digger", "Fate-Twister",
-    "The Architect", "Echo of the Fall", "The Last Laugh", "Star-Crush",
-    "Oblivion's Kiss", "The Unmaker", "Soul-Anchor", "Aether-Spire",
-    "Calamity's Wake", "The Mourning Star", "Heart-Stopper", "The Paradox",
-    "Nightfall", "The Great Leveller", "Cruel Mercy"
+    "Shattered Promise", "Grave-Digger", "Fate-Twister", "The Architect", "Echo of the Fall",
+    "The Last Laugh", "Star-Crush", "Oblivion's Kiss", "The Unmaker", "Soul-Anchor",
+    "Aether-Spire", "Calamity's Wake", "The Mourning Star", "Heart-Stopper", "The Paradox",
+    "Nightfall", "The Great Leveller", "Cruel Mercy", "Sun-Eater", "The Iron Grave",
+    "Truth-Seeker", "The Bitter End", "Crown of Thorns", "God-Slayer", "The Nameless",
+    "Winter’s Breath", "The Gilded Lie", "Omen-Bringer", "The Hollow King", "Ashen Wake",
+    "The Second Chance", "Blood-Letter", "The Weaver", "Broken Sky", "The Quiet",
+    "Storm-Caller", "Lost Memory", "The First Stone", "The Glass Horizon", "Void-Stitcher",
+    "The Midnight Sun", "Reaper’s Toll", "The Unspoken", "Dream-Eater", "The Pale Horse",
+    "Cinder-Soul", "The Last Witness", "Gravity’s Grip", "The Ruined King", "Shadow-Stalker",
+    "The Infinite Breath", "Star-Fell", "The Merciless", "Bone-Warden", "The False Prophet",
+    "Aura of Ash", "The Dying Ember", "Finality's Reach", "The Black Horizon", "Fury Incarnate",
+    "The Last Ember", "Oath-Breaker", "The Deep Silence", "Heaven’s Ruin", "The Fallen Crown",
+    "Ashbringer", "The Final Horizon", "Storm of Bones", "The Fractured One", "Light’s Bane",
+    "The Burning Veil", "Warden of Ruin", "The Crimson Oath", "Dread Sovereign", "The Cold Reckoning",
+    "Veil-Piercer", "The Endless March", "Ruin’s Herald", "The Shrouded Truth", "King of Nothing",
+    "The Severed Path", "Flame of Judgment", "The Withered Hand", "The Iron Oath", "Harvester of Echoes",
+    "The Bleak Star", "The Unseen End", "Crownbreaker", "The Silent Cataclysm", "Bearer of Ash",
+    "The Last Oracle", "Duskbringer", "The Forsaken Light", "Grave of Kings", "The Hollow Flame",
+    "Tyrant of Dust", "The Veiled End", "Emberfall",
+    "The Crawling Vast", "Eyes Beyond the Veil", "The Starved Cosmos", "Whisperer in Black Suns", "The Infinite Maw",
+    "He Who Waits Beneath", "The Shattered Firmament", "Voice of the Outer Dark", "The Unblinking Abyss", "Dreams of the Drowned Sky",
+    "The Hungering Silence", "Watcher Beyond Time", "The Spiral Madness", "The Void That Breathes", "The Broken Constellation",
+    "The Flesh of Stars", "Harbinger of the Unseen", "The Blackened Orbit", "The Eternal Below", "The Mind Unraveled",
+    "The Endless Eye", "The Screaming Horizon", "The Nameless Depth", "The Living Darkness", "The Outer Hunger",
+    "The Sky That Watches", "The Depth Without End", "The Cosmic Blight", "The Unknowable Shape", "The Starless Dream",
+    "The Drowned Cosmos", "The Hollow Universe", "The Rift Eternal", "The Many-Voiced Silence", "The Breach in Reality",
+    "The Twisted Infinity", "The Crawling Eternity", "The Veil Torn Asunder", "The Unseen Choir", "The Beyond Made Flesh",
+    "The Dark Between Stars", "The Shivering Expanse", "The Abyss Gazes Back", "The Fractured Cosmos", "The Unending Spiral",
+    "The Echoing Void", "The Great Unraveling", "The Horror Unbound", "The Black Tide Rising", "The Infinite Descent",
+    "Crown of Eternity", "The Divine Heir", "Sovereign of Stars", "The Golden Ascendant", "The Celestial Throne",
+    "Bearer of the First Crown", "The Radiant Monarch", "The Ivory King", "Queen of the Last Dawn", "The Imperishable Crown",
+    "The Sunforged Sovereign", "Lord of Endless Light", "The Sacred Regent", "The Crown Unbroken", "The Silver Emperor",
+    "The Ascended King", "The Lion of Heaven", "The Throne Eternal", "The Crown of Ages", "The God-Crowned",
+    "The High Sovereign", "The Anointed Flame", "The Crown of Judgment", "The King Undying", "The Throne of Glory",
+    "The Regal Ascension", "The Crown Forged in Heaven", "The Divine Arbiter", "The King of First Light", "The Eternal Sovereign",
+    "The Crown of the World", "The Sacred King", "The Throne Bearer", "The Crown of Stars", "The Monarch Eternal",
+    "The Blessed Emperor", "The Crown of Dawn", "The King Beyond Time", "The Celestial King", "The Throne Unending",
+    "The Crown of Radiance", "The Divine Kingmaker", "The Sovereign Ascendant", "The Crown of Infinity", "The Everlasting King",
+    "The Throne of Ages", "The Crown of Divinity", "The King of Light Eternal", "The Crown Unyielding", "The Sovereign Immortal",
+    "The Black Blade", "Gravewalker", "The Iron Oathbreaker", "Ashwalker", "The Bloodbound",
+    "The Last Sellsword", "The Gallows King", "The Broken Blade", "The Wretched Knight", "The Dread Mercenary",
+    "The Iron Tyrant", "The Hollow Blade", "The Bleeding Crown", "The Forsworn", "The Last Reaver",
+    "The Mudborn King", "The Rusted Crown", "The Blackened Knight", "The Oathsworn Killer", "The Dagger in the Dark",
+    "The Thorn Knight", "The Withered King", "The Ashen Blade", "The Bastard King", "The Broken Oath",
+    "The Last Executioner", "The Bloodied Throne", "The Iron Bastard", "The Grim Sellsword", "The Dying Knight",
+    "The War-Torn King", "The Crownless", "The Black Oath", "The Rust Knight", "The Hollow Crown",
+    "The King in Chains", "The Blade of Ash", "The Fallen Sellsword", "The Bleak Knight", "The Red Reaver",
+    "The Broken Throne", "The Black Gallows", "The Iron Reaver", "The King of Crows", "The Last Blackblade",
+    "The Forsaken Knight", "The Blood Oath", "The Crown in Ruin", "The Ashen King", "The Dread Blade"
 ]
+
 
 ITEM_BASES = {
     "Weapon": [
@@ -675,38 +746,319 @@ CLASS_STATS = {
     "Artificer": ("I", "L"), "Mystic": ("I", "D")
 }
 
-# ── Tiered Spell Pools ──────────────────────────────────────────────────
-# Structured as Stat -> Tier -> List of Spells
-TIERED_SPELLS = {
-    "I": {
-        "Minor": ["Magic Spark", "Mana Drip"], "Major": ["Arcane Blast", "Spell Shield"],
-        "II": ["Meteor Shower", "Time Warp"], "III": ["The Omega Protocol", "Reality Collapse"]
+# ── Spell Definitions ───────────────────────────────────────────────────
+# Each spell is a full object with behaviour data.
+# effect_type keys:
+#   xp_boost      — multiply XP gained while active
+#   gold_boost    — multiply gold gained while active
+#   stat_buff     — temporarily raise stat_key by magnitude (reverted on expiry)
+#   hp_regen      — restore magnitude HP per tick while active
+#   mp_regen      — restore magnitude MP per tick while active
+#   combat_damage — add magnitude flat bonus damage in fights
+#   combat_defense— reduce damage taken by magnitude fraction
+#   loot_quality  — shift item power up by magnitude during drops
+#   transmute     — convert inventory items in-field (instant, no duration)
+#   craft         — Tier III: reroll an inventory item to higher power (instant)
+
+SPELL_DEFINITIONS = {
+    # ── Intellect (I) ─────────────────────────────────────────────────────
+    "Magic Spark": {
+        "stat": "I", "tier": "Minor", "mp_cost": 6, "duration": 6,
+        "effect_type": "xp_boost", "magnitude": 0.15,
+        "description": "Ignites a spark of arcane focus. Gain +15% XP for 6 actions.",
     },
-    "P": {
-        "Minor": ["Heavy Strike", "Pommel Bash"], "Major": ["Sunder Armor", "Whirlwind"],
-        "II": ["Mountain Splitter", "Dragon Roar"], "III": ["God-Slayer Impact", "World Ender"]
+    "Mana Drip": {
+        "stat": "I", "tier": "Minor", "mp_cost": 0, "duration": 5,
+        "effect_type": "mp_regen", "magnitude": 2,
+        "description": "Slowly draws ambient mana inward. Restores 2 MP per action for 5 actions.",
     },
-    "D": {
-        "Minor": ["Quick Stab", "Side Step"], "Major": ["Flurry of Blows", "Shadow Dash"],
-        "II": ["Assassinate", "Ghost Walk"], "III": ["Thousand Cuts", "Dimension Strike"]
+    "Arcane Blast": {
+        "stat": "I", "tier": "Major", "mp_cost": 14, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 8,
+        "description": "Releases stored arcane energy in a single burst. Deals 8 bonus damage in the next fight.",
     },
-    "E": {
-        "Minor": ["Iron Skin", "Deep Breath"], "Major": ["Unstoppable Will", "Second Wind"],
-        "II": ["Juggernaut Aura", "Eternal Stand"], "III": ["Immortal Essence", "Bastion of Life"]
+    "Spell Shield": {
+        "stat": "I", "tier": "Major", "mp_cost": 16, "duration": 8,
+        "effect_type": "combat_defense", "magnitude": 0.20,
+        "description": "Wraps the caster in a lattice of force. Reduces incoming damage by 20% for 8 actions.",
     },
-    "R": {
-        "Minor": ["Guard Up", "Stone Flesh"], "Major": ["Reflective Shell", "Mana Shield"],
-        "II": ["Absolute Barrier", "Kinetic Dampener"], "III": ["Diamond Soul", "Nullification Field"]
+    "Meteor Shower": {
+        "stat": "I", "tier": "II", "mp_cost": 29, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 22,
+        "description": "Calls down a rain of arcane meteors. Deals 22 bonus damage in the next fight.",
     },
-    "L": {
-        "Minor": ["Lucky Coin", "Fate's Flick"], "Major": ["Critical Eye", "Double Down"],
-        "II": ["Jackpot Strike", "Fortune's Favor"], "III": ["Reality Cheat", "God-Hand Roll"]
+    "Time Warp": {
+        "stat": "I", "tier": "II", "mp_cost": 27, "duration": 10,
+        "effect_type": "xp_boost", "magnitude": 0.40,
+        "description": "Bends the flow of time around the caster. Gain +40% XP for 10 actions.",
     },
-    "G": {
-        "Minor": ["Coinsense", "Bargain Hint"], "Major": ["Golden Touch", "Treasure Sense"],
-        "II": ["Midas Grip", "Wealth Aura"], "III": ["King's Fortune", "Everfull Purse"]
-    }
+    "The Omega Protocol": {
+        "stat": "I", "tier": "III", "mp_cost": 57, "duration": 15,
+        "effect_type": "xp_boost", "magnitude": 0.80,
+        "description": "Unlocks a forbidden layer of cognition. Gain +80% XP for 15 actions.",
+    },
+    "Reality Collapse": {
+        "stat": "I", "tier": "III", "mp_cost": 62, "duration": 0,
+        "effect_type": "craft", "magnitude": 1,
+        "description": "Tears the fabric of an item and reweaves it at higher power. Crafts one inventory item into a superior version.",
+    },
+    # ── Power (P) ─────────────────────────────────────────────────────────
+    "Heavy Strike": {
+        "stat": "P", "tier": "Minor", "mp_cost": 7, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 6,
+        "description": "A focused blow that bypasses armour. Deals 6 bonus damage in the next fight.",
+    },
+    "Pommel Bash": {
+        "stat": "P", "tier": "Minor", "mp_cost": 6, "duration": 4,
+        "effect_type": "stat_buff", "stat_key": "P", "magnitude": 3,
+        "description": "Loosens up the weapon arm. Raises Power by 3 for 4 actions.",
+    },
+    "Sunder Armor": {
+        "stat": "P", "tier": "Major", "mp_cost": 16, "duration": 8,
+        "effect_type": "combat_defense", "magnitude": 0.15,
+        "description": "Shatters the enemy's guard. Reduces damage taken by 15% for 8 actions.",
+    },
+    "Whirlwind": {
+        "stat": "P", "tier": "Major", "mp_cost": 18, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 14,
+        "description": "Spins into a vortex of steel. Deals 14 bonus damage in the next fight.",
+    },
+    "Mountain Splitter": {
+        "stat": "P", "tier": "II", "mp_cost": 32, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 28,
+        "description": "A strike so powerful it reshapes terrain. Deals 28 bonus damage in the next fight.",
+    },
+    "Dragon Roar": {
+        "stat": "P", "tier": "II", "mp_cost": 27, "duration": 10,
+        "effect_type": "stat_buff", "stat_key": "P", "magnitude": 8,
+        "description": "Channels the ferocity of a dragon. Raises Power by 8 for 10 actions.",
+    },
+    "God-Slayer Impact": {
+        "stat": "P", "tier": "III", "mp_cost": 62, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 60,
+        "description": "A blow capable of felling divine beings. Deals 60 bonus damage in the next fight.",
+    },
+    "World Ender": {
+        "stat": "P", "tier": "III", "mp_cost": 57, "duration": 12,
+        "effect_type": "stat_buff", "stat_key": "P", "magnitude": 18,
+        "description": "Channels the force that breaks worlds. Raises Power by 18 for 12 actions.",
+    },
+    # ── Dexterity (D) ─────────────────────────────────────────────────────
+    "Quick Stab": {
+        "stat": "D", "tier": "Minor", "mp_cost": 6, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 5,
+        "description": "A lightning-fast thrust. Deals 5 bonus damage in the next fight.",
+    },
+    "Side Step": {
+        "stat": "D", "tier": "Minor", "mp_cost": 5, "duration": 5,
+        "effect_type": "stat_buff", "stat_key": "D", "magnitude": 3,
+        "description": "Shifts weight to a lighter footing. Raises Dexterity by 3 for 5 actions.",
+    },
+    "Flurry of Blows": {
+        "stat": "D", "tier": "Major", "mp_cost": 17, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 16,
+        "description": "Unleashes a rapid sequence of strikes. Deals 16 bonus damage in the next fight.",
+    },
+    "Shadow Dash": {
+        "stat": "D", "tier": "Major", "mp_cost": 15, "duration": 7,
+        "effect_type": "stat_buff", "stat_key": "D", "magnitude": 6,
+        "description": "Moves through shadows faster than the eye can track. Raises Dexterity by 6 for 7 actions.",
+    },
+    "Assassinate": {
+        "stat": "D", "tier": "II", "mp_cost": 31, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 32,
+        "description": "Finds the gap in every defence. Deals 32 bonus damage in the next fight.",
+    },
+    "Ghost Walk": {
+        "stat": "D", "tier": "II", "mp_cost": 29, "duration": 10,
+        "effect_type": "combat_defense", "magnitude": 0.25,
+        "description": "Becomes briefly intangible. Reduces incoming damage by 25% for 10 actions.",
+    },
+    "Thousand Cuts": {
+        "stat": "D", "tier": "III", "mp_cost": 60, "duration": 0,
+        "effect_type": "combat_damage", "magnitude": 55,
+        "description": "A thousand strikes in a single breath. Deals 55 bonus damage in the next fight.",
+    },
+    "Dimension Strike": {
+        "stat": "D", "tier": "III", "mp_cost": 57, "duration": 12,
+        "effect_type": "stat_buff", "stat_key": "D", "magnitude": 16,
+        "description": "Strikes from a fold in space. Raises Dexterity by 16 for 12 actions.",
+    },
+    # ── Endurance (E) ─────────────────────────────────────────────────────
+    "Iron Skin": {
+        "stat": "E", "tier": "Minor", "mp_cost": 7, "duration": 6,
+        "effect_type": "combat_defense", "magnitude": 0.12,
+        "description": "Hardens the flesh to iron. Reduces incoming damage by 12% for 6 actions.",
+    },
+    "Deep Breath": {
+        "stat": "E", "tier": "Minor", "mp_cost": 5, "duration": 5,
+        "effect_type": "hp_regen", "magnitude": 4,
+        "description": "Steadies the heart and heals. Restores 4 HP per action for 5 actions.",
+    },
+    "Unstoppable Will": {
+        "stat": "E", "tier": "Major", "mp_cost": 18, "duration": 8,
+        "effect_type": "stat_buff", "stat_key": "E", "magnitude": 6,
+        "description": "Refuses to yield to pain. Raises Endurance by 6 for 8 actions.",
+    },
+    "Second Wind": {
+        "stat": "E", "tier": "Major", "mp_cost": 16, "duration": 7,
+        "effect_type": "hp_regen", "magnitude": 8,
+        "description": "Draws on hidden reserves. Restores 8 HP per action for 7 actions.",
+    },
+    "Juggernaut Aura": {
+        "stat": "E", "tier": "II", "mp_cost": 33, "duration": 12,
+        "effect_type": "combat_defense", "magnitude": 0.30,
+        "description": "Becomes an unstoppable force of endurance. Reduces incoming damage by 30% for 12 actions.",
+    },
+    "Eternal Stand": {
+        "stat": "E", "tier": "II", "mp_cost": 29, "duration": 10,
+        "effect_type": "hp_regen", "magnitude": 15,
+        "description": "Roots to the earth and regenerates. Restores 15 HP per action for 10 actions.",
+    },
+    "Immortal Essence": {
+        "stat": "E", "tier": "III", "mp_cost": 62, "duration": 15,
+        "effect_type": "hp_regen", "magnitude": 25,
+        "description": "Taps into an undying life force. Restores 25 HP per action for 15 actions.",
+    },
+    "Bastion of Life": {
+        "stat": "E", "tier": "III", "mp_cost": 60, "duration": 14,
+        "effect_type": "combat_defense", "magnitude": 0.45,
+        "description": "Becomes an immovable bastion of pure vitality. Reduces incoming damage by 45% for 14 actions.",
+    },
+    # ── Resilience (R) ────────────────────────────────────────────────────
+    "Guard Up": {
+        "stat": "R", "tier": "Minor", "mp_cost": 6, "duration": 5,
+        "effect_type": "stat_buff", "stat_key": "R", "magnitude": 3,
+        "description": "Raises the shield and steadies the stance. Raises Resilience by 3 for 5 actions.",
+    },
+    "Stone Flesh": {
+        "stat": "R", "tier": "Minor", "mp_cost": 7, "duration": 5,
+        "effect_type": "combat_defense", "magnitude": 0.10,
+        "description": "Skin becomes briefly stone-hard. Reduces incoming damage by 10% for 5 actions.",
+    },
+    "Reflective Shell": {
+        "stat": "R", "tier": "Major", "mp_cost": 18, "duration": 8,
+        "effect_type": "combat_defense", "magnitude": 0.22,
+        "description": "Wraps the body in a reflective ward. Reduces incoming damage by 22% for 8 actions.",
+    },
+    "Mana Shield": {
+        "stat": "R", "tier": "Major", "mp_cost": 14, "duration": 7,
+        "effect_type": "mp_regen", "magnitude": 4,
+        "description": "Converts defensive focus into mana. Restores 4 MP per action for 7 actions.",
+    },
+    "Absolute Barrier": {
+        "stat": "R", "tier": "II", "mp_cost": 35, "duration": 12,
+        "effect_type": "combat_defense", "magnitude": 0.35,
+        "description": "An impenetrable ward of pure will. Reduces incoming damage by 35% for 12 actions.",
+    },
+    "Kinetic Dampener": {
+        "stat": "R", "tier": "II", "mp_cost": 29, "duration": 10,
+        "effect_type": "stat_buff", "stat_key": "R", "magnitude": 10,
+        "description": "Absorbs and redirects kinetic force. Raises Resilience by 10 for 10 actions.",
+    },
+    "Diamond Soul": {
+        "stat": "R", "tier": "III", "mp_cost": 62, "duration": 15,
+        "effect_type": "combat_defense", "magnitude": 0.50,
+        "description": "The soul crystallises into pure diamond. Reduces incoming damage by 50% for 15 actions.",
+    },
+    "Nullification Field": {
+        "stat": "R", "tier": "III", "mp_cost": 57, "duration": 14,
+        "effect_type": "stat_buff", "stat_key": "R", "magnitude": 20,
+        "description": "Generates a field that nullifies hostile forces. Raises Resilience by 20 for 14 actions.",
+    },
+    # ── Luck (L) ──────────────────────────────────────────────────────────
+    "Lucky Coin": {
+        "stat": "L", "tier": "Minor", "mp_cost": 5, "duration": 6,
+        "effect_type": "gold_boost", "magnitude": 0.20,
+        "description": "Flips a coin that always lands lucky. Gain +20% gold for 6 actions.",
+    },
+    "Fate's Flick": {
+        "stat": "L", "tier": "Minor", "mp_cost": 6, "duration": 5,
+        "effect_type": "loot_quality", "magnitude": 2,
+        "description": "Nudges fate just enough. Increases item power by +2 on next 5 drops.",
+    },
+    "Critical Eye": {
+        "stat": "L", "tier": "Major", "mp_cost": 16, "duration": 8,
+        "effect_type": "loot_quality", "magnitude": 5,
+        "description": "Sees the hidden value in everything. Increases item power by +5 on next 8 drops.",
+    },
+    "Double Down": {
+        "stat": "L", "tier": "Major", "mp_cost": 15, "duration": 8,
+        "effect_type": "gold_boost", "magnitude": 0.45,
+        "description": "Bets everything and wins. Gain +45% gold for 8 actions.",
+    },
+    "Jackpot Strike": {
+        "stat": "L", "tier": "II", "mp_cost": 31, "duration": 10,
+        "effect_type": "gold_boost", "magnitude": 0.80,
+        "description": "Every action pays out like a jackpot. Gain +80% gold for 10 actions.",
+    },
+    "Fortune's Favor": {
+        "stat": "L", "tier": "II", "mp_cost": 29, "duration": 10,
+        "effect_type": "loot_quality", "magnitude": 10,
+        "description": "Fortune itself reaches down to help. Increases item power by +10 on next 10 drops.",
+    },
+    "Reality Cheat": {
+        "stat": "L", "tier": "III", "mp_cost": 60, "duration": 14,
+        "effect_type": "gold_boost", "magnitude": 1.50,
+        "description": "Cheats the rules of reality in your favour. Gain +150% gold for 14 actions.",
+    },
+    "God-Hand Roll": {
+        "stat": "L", "tier": "III", "mp_cost": 57, "duration": 0,
+        "effect_type": "craft", "magnitude": 1,
+        "description": "Rolls the dice of creation itself. Crafts one inventory item into a superior version.",
+    },
+    # ── Greed (G) ─────────────────────────────────────────────────────────
+    "Coinsense": {
+        "stat": "G", "tier": "Minor", "mp_cost": 5, "duration": 6,
+        "effect_type": "gold_boost", "magnitude": 0.25,
+        "description": "Nose twitches at the scent of gold. Gain +25% gold for 6 actions.",
+    },
+    "Bargain Hint": {
+        "stat": "G", "tier": "Minor", "mp_cost": 4, "duration": 5,
+        "effect_type": "transmute", "magnitude": 0.40,
+        "description": "Sees what an item is truly worth. Transmutes one inventory item to gold at 40% market rate.",
+    },
+    "Golden Touch": {
+        "stat": "G", "tier": "Major", "mp_cost": 16, "duration": 9,
+        "effect_type": "gold_boost", "magnitude": 0.60,
+        "description": "Everything touched turns to profit. Gain +60% gold for 9 actions.",
+    },
+    "Treasure Sense": {
+        "stat": "G", "tier": "Major", "mp_cost": 14, "duration": 0,
+        "effect_type": "transmute", "magnitude": 0.55,
+        "description": "Extracts the hidden value from an item. Transmutes one inventory item to gold at 55% market rate.",
+    },
+    "Midas Grip": {
+        "stat": "G", "tier": "II", "mp_cost": 32, "duration": 12,
+        "effect_type": "gold_boost", "magnitude": 1.00,
+        "description": "The legendary touch of Midas. Gain +100% gold for 12 actions.",
+    },
+    "Wealth Aura": {
+        "stat": "G", "tier": "II", "mp_cost": 27, "duration": 0,
+        "effect_type": "transmute", "magnitude": 0.70,
+        "description": "Radiates an aura of pure value. Transmutes one inventory item to gold at 70% market rate.",
+    },
+    "King's Fortune": {
+        "stat": "G", "tier": "III", "mp_cost": 60, "duration": 15,
+        "effect_type": "gold_boost", "magnitude": 2.00,
+        "description": "Commands the wealth of kings. Gain +200% gold for 15 actions.",
+    },
+    "Everfull Purse": {
+        "stat": "G", "tier": "III", "mp_cost": 52, "duration": 0,
+        "effect_type": "transmute", "magnitude": 0.82,
+        "description": "The purse that is never empty. Transmutes one inventory item to gold at 82% market rate. (Tier III cap.)",
+    },
 }
+
+# Convenience lookup: name -> definition
+SPELL_BY_NAME = {k: v for k, v in SPELL_DEFINITIONS.items()}
+
+# Rebuild TIERED_SPELLS as name lists (preserves generate_stat_spell logic)
+TIERED_SPELLS = {}
+for _name, _sp in SPELL_DEFINITIONS.items():
+    _st = _sp["stat"]
+    _ti = _sp["tier"]
+    TIERED_SPELLS.setdefault(_st, {}).setdefault(_ti, []).append(_name)
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  CONFIG  (tweak gameplay here)
@@ -750,6 +1102,7 @@ ACTION_LABELS = {
     "find_vendor":  "Finding a vendor...",
     "sell":        "Selling at vendor...",
     "restore":     "Restoring HP/MP...",
+    "transmute":   "Transmuting items...",
     "upgrade":     "Upgrading gear...",
     "return_town":  "Returning to town...",
     "ghost":       "Haunting the area...",
@@ -845,6 +1198,64 @@ def generate_stat_spell(char):
 
     chosen_tier = random.choice(eligible_tiers)
     return random.choice(pool[chosen_tier])
+
+# ── Spell / Active-Effect Helpers ─────────────────────────────────────────────
+import math as _math
+
+def transmute_efficiency(spell_tier, intelligence):
+    """Returns a float 0..0.92 — fraction of market value a transmute yields."""
+    tier_base = {"Minor": 0.40, "Major": 0.55, "II": 0.70, "III": 0.82}
+    base = tier_base.get(spell_tier, 0.40)
+    i_bonus = 0.18 * _math.log(1 + intelligence / 20)
+    return min(0.92, base + i_bonus)
+
+def cast_chance(spell_def, char):
+    """Probability [0..1] that this spell fires this tick, given class affinity."""
+    class_stats = CLASS_STATS.get(char.get("class", "Wizard"), ("I", "L"))
+    tier_base = {"Minor": 0.35, "Major": 0.25, "II": 0.18, "III": 0.10}
+    base = tier_base.get(spell_def["tier"], 0.20)
+    # Class primary stat match gives full chance; secondary half; off-stat 1/6
+    if spell_def["stat"] == class_stats[0]:
+        affinity = 1.0
+    elif spell_def["stat"] == class_stats[1]:
+        affinity = 0.5
+    else:
+        affinity = 0.16
+    return base * affinity
+
+# Action types where each category of spell is permitted to fire
+SPELL_CAST_WINDOWS = {
+    "xp_boost":       {"rest", "travel", "search", "locate", "scout",
+                       "investigate", "gather", "escort", "inspect", "collect", "speak"},
+    "gold_boost":     {"loot", "rest", "travel"},
+    "stat_buff":      {"rest", "travel", "fight"},
+    "hp_regen":       {"rest"},
+    "mp_regen":       {"rest", "travel"},
+    "combat_damage":  {"fight"},
+    "combat_defense": {"fight", "rest"},
+    "loot_quality":   {"loot"},
+    "transmute":      {"loot"},          # in-field transmutation
+    "craft":          {"loot", "rest"},  # Tier III crafting roll
+}
+
+def tick_active_effects(char):
+    """Decrement ticks on all active effects; revert expired stat buffs."""
+    remaining = []
+    for eff in char.get("active_effects", []):
+        eff["ticks_left"] -= 1
+        if eff["ticks_left"] <= 0:
+            # Revert stat buffs cleanly
+            if eff["effect_type"] == "stat_buff":
+                key = eff.get("stat_key", "")
+                if key and key in char["stats"]:
+                    char["stats"][key] -= eff["magnitude"]
+        else:
+            remaining.append(eff)
+    char["active_effects"] = remaining
+
+def has_active_effect(char, effect_type):
+    """True if an effect of this type is currently running."""
+    return any(e["effect_type"] == effect_type for e in char.get("active_effects", []))
 
 def get_max_capacity(stats):
     return stats.get("P", 10) * 5 + stats.get("E", 10) * 2
@@ -1012,6 +1423,331 @@ THEMES = {
         "text_vendor": "#00ffff",
         "text_normal": "#00ff00",
     },
+        "Midnight": {
+        "bg_dark":   "#0b1020",
+        "bg_mid":    "#141b2d",
+        "bg_panel":  "#111827",
+        "bg_row":    "#1b2438",
+        "fg_gold":   "#7dd3fc",
+        "fg_text":   "#e0f2fe",
+        "fg_dim":    "#94a3b8",
+        "btn_dark":  "#1e3a5f",
+        "btn_go":    "#256d85",
+        "btn_bak":   "#7f1d1d",
+        "hp_bar":    "#ef4444",
+        "mp_bar":    "#3b82f6",
+        "xp_bar":    "#10b981",
+        "gold_bar":  "#f59e0b",
+        "input_bg":  "#0f172a",
+        "story_bg":  "#0b1120",
+        "panel_bg":  "#111827",
+        "text_death":  "#f87171",
+        "text_ghost":  "#c084fc",
+        "text_level":  "#34d399",
+        "text_quest":  "#fbbf24",
+        "text_vendor": "#38bdf8",
+        "text_normal": "#dbeafe",
+    },
+    "Crimson": {
+        "bg_dark":   "#1a0d0d",
+        "bg_mid":    "#2b1111",
+        "bg_panel":  "#220909",
+        "bg_row":    "#311313",
+        "fg_gold":   "#ffcc99",
+        "fg_text":   "#ffe4e1",
+        "fg_dim":    "#d4a5a5",
+        "btn_dark":  "#5c1f1f",
+        "btn_go":    "#8b2e2e",
+        "btn_bak":   "#3b0d0d",
+        "hp_bar":    "#ff4d4d",
+        "mp_bar":    "#5dade2",
+        "xp_bar":    "#58d68d",
+        "gold_bar":  "#f5b041",
+        "input_bg":  "#2a1010",
+        "story_bg":  "#180808",
+        "panel_bg":  "#220909",
+        "text_death":  "#ff6b6b",
+        "text_ghost":  "#d7bde2",
+        "text_level":  "#82e0aa",
+        "text_quest":  "#f8c471",
+        "text_vendor": "#85c1e9",
+        "text_normal": "#f5c6c6",
+    },
+    "Forest": {
+        "bg_dark":   "#0f1c12",
+        "bg_mid":    "#1b2b1f",
+        "bg_panel":  "#132017",
+        "bg_row":    "#1d3323",
+        "fg_gold":   "#d4af37",
+        "fg_text":   "#e8f5e9",
+        "fg_dim":    "#9db59e",
+        "btn_dark":  "#2d4a2d",
+        "btn_go":    "#3f6b3f",
+        "btn_bak":   "#5c2f2f",
+        "hp_bar":    "#c0392b",
+        "mp_bar":    "#2980b9",
+        "xp_bar":    "#27ae60",
+        "gold_bar":  "#d4af37",
+        "input_bg":  "#16261a",
+        "story_bg":  "#0d170f",
+        "panel_bg":  "#132017",
+        "text_death":  "#e74c3c",
+        "text_ghost":  "#bb8fce",
+        "text_level":  "#58d68d",
+        "text_quest":  "#f7dc6f",
+        "text_vendor": "#5dade2",
+        "text_normal": "#d5e8d4",
+    },
+    "Cyberpunk": {
+        "bg_dark":   "#0d0221",
+        "bg_mid":    "#1a0333",
+        "bg_panel":  "#120126",
+        "bg_row":    "#220544",
+        "fg_gold":   "#ff00ff",
+        "fg_text":   "#00f5ff",
+        "fg_dim":    "#9d4edd",
+        "btn_dark":  "#3c096c",
+        "btn_go":    "#00b4d8",
+        "btn_bak":   "#9d0208",
+        "hp_bar":    "#ff006e",
+        "mp_bar":    "#3a86ff",
+        "xp_bar":    "#06d6a0",
+        "gold_bar":  "#ffd60a",
+        "input_bg":  "#14042b",
+        "story_bg":  "#0a0118",
+        "panel_bg":  "#120126",
+        "text_death":  "#ff4d6d",
+        "text_ghost":  "#c77dff",
+        "text_level":  "#00f5d4",
+        "text_quest":  "#ffd60a",
+        "text_vendor": "#4cc9f0",
+        "text_normal": "#caf0f8",
+    },
+    "Royal": {
+        "bg_dark":   "#1a1633",
+        "bg_mid":    "#2a2450",
+        "bg_panel":  "#201b40",
+        "bg_row":    "#312a5e",
+        "fg_gold":   "#ffd700",
+        "fg_text":   "#f8f4ff",
+        "fg_dim":    "#c3b1e1",
+        "btn_dark":  "#483d8b",
+        "btn_go":    "#6a5acd",
+        "btn_bak":   "#8b0000",
+        "hp_bar":    "#dc143c",
+        "mp_bar":    "#4169e1",
+        "xp_bar":    "#32cd32",
+        "gold_bar":  "#ffd700",
+        "input_bg":  "#241d45",
+        "story_bg":  "#18122b",
+        "panel_bg":  "#201b40",
+        "text_death":  "#ff4f6d",
+        "text_ghost":  "#d8bfd8",
+        "text_level":  "#7fff7f",
+        "text_quest":  "#ffdf80",
+        "text_vendor": "#87cefa",
+        "text_normal": "#eee6ff",
+    },
+    "Desert": {
+        "bg_dark":   "#3b2f2f",
+        "bg_mid":    "#5a4632",
+        "bg_panel":  "#4a3928",
+        "bg_row":    "#6b523a",
+        "fg_gold":   "#f4d35e",
+        "fg_text":   "#fff8e7",
+        "fg_dim":    "#d9c7a1",
+        "btn_dark":  "#8b6f47",
+        "btn_go":    "#a67c52",
+        "btn_bak":   "#7b3f00",
+        "hp_bar":    "#d1495b",
+        "mp_bar":    "#3c91e6",
+        "xp_bar":    "#6ab04c",
+        "gold_bar":  "#f4d35e",
+        "input_bg":  "#5a4632",
+        "story_bg":  "#34271f",
+        "panel_bg":  "#4a3928",
+        "text_death":  "#ff7675",
+        "text_ghost":  "#c8a2c8",
+        "text_level":  "#9be564",
+        "text_quest":  "#ffd166",
+        "text_vendor": "#74c0fc",
+        "text_normal": "#fcecc9",
+    },
+        "Steampunk": {
+        "bg_dark":   "#2b1d14",
+        "bg_mid":    "#3d2a1d",
+        "bg_panel":  "#332419",
+        "bg_row":    "#4a3525",
+        "fg_gold":   "#d4a373",
+        "fg_text":   "#f1e0c5",
+        "fg_dim":    "#b08968",
+        "btn_dark":  "#6f4e37",
+        "btn_go":    "#8c6a43",
+        "btn_bak":   "#5c2c2c",
+        "hp_bar":    "#b03a2e",
+        "mp_bar":    "#2874a6",
+        "xp_bar":    "#239b56",
+        "gold_bar":  "#c89b3c",
+        "input_bg":  "#3a2b20",
+        "story_bg":  "#241811",
+        "panel_bg":  "#332419",
+        "text_death":  "#e74c3c",
+        "text_ghost":  "#c39bd3",
+        "text_level":  "#58d68d",
+        "text_quest":  "#f8c471",
+        "text_vendor": "#5dade2",
+        "text_normal": "#ead7b7",
+    },
+    "Ice Cavern": {
+        "bg_dark":   "#0b1d2a",
+        "bg_mid":    "#12384d",
+        "bg_panel":  "#102b3a",
+        "bg_row":    "#18465d",
+        "fg_gold":   "#bde0fe",
+        "fg_text":   "#e0fbfc",
+        "fg_dim":    "#98c1d9",
+        "btn_dark":  "#1d3557",
+        "btn_go":    "#457b9d",
+        "btn_bak":   "#7b2d26",
+        "hp_bar":    "#ef476f",
+        "mp_bar":    "#3a86ff",
+        "xp_bar":    "#06d6a0",
+        "gold_bar":  "#90e0ef",
+        "input_bg":  "#153243",
+        "story_bg":  "#08141d",
+        "panel_bg":  "#102b3a",
+        "text_death":  "#ff758f",
+        "text_ghost":  "#b8c0ff",
+        "text_level":  "#80ffdb",
+        "text_quest":  "#caf0f8",
+        "text_vendor": "#48cae4",
+        "text_normal": "#edf6f9",
+    },
+    "Blood Moon": {
+        "bg_dark":   "#14080e",
+        "bg_mid":    "#2a0f19",
+        "bg_panel":  "#1d0b12",
+        "bg_row":    "#34121f",
+        "fg_gold":   "#ffb4a2",
+        "fg_text":   "#ffe5d9",
+        "fg_dim":    "#c08497",
+        "btn_dark":  "#5e2129",
+        "btn_go":    "#8b2635",
+        "btn_bak":   "#2b0a0f",
+        "hp_bar":    "#ff4d6d",
+        "mp_bar":    "#5dade2",
+        "xp_bar":    "#57cc99",
+        "gold_bar":  "#f4a261",
+        "input_bg":  "#261019",
+        "story_bg":  "#10060a",
+        "panel_bg":  "#1d0b12",
+        "text_death":  "#ff758f",
+        "text_ghost":  "#d0a2f7",
+        "text_level":  "#80ed99",
+        "text_quest":  "#ffd6a5",
+        "text_vendor": "#74c0fc",
+        "text_normal": "#f8d7da",
+    },
+    "Vaporwave": {
+        "bg_dark":   "#2b0a3d",
+        "bg_mid":    "#4b1d6d",
+        "bg_panel":  "#3a1459",
+        "bg_row":    "#5c2a82",
+        "fg_gold":   "#ff9ff3",
+        "fg_text":   "#f1f2f6",
+        "fg_dim":    "#c8a2c8",
+        "btn_dark":  "#6c5ce7",
+        "btn_go":    "#00cec9",
+        "btn_bak":   "#d63031",
+        "hp_bar":    "#ff6b81",
+        "mp_bar":    "#54a0ff",
+        "xp_bar":    "#1dd1a1",
+        "gold_bar":  "#feca57",
+        "input_bg":  "#44235f",
+        "story_bg":  "#1e082e",
+        "panel_bg":  "#3a1459",
+        "text_death":  "#ff7675",
+        "text_ghost":  "#e0aaff",
+        "text_level":  "#55efc4",
+        "text_quest":  "#ffeaa7",
+        "text_vendor": "#74b9ff",
+        "text_normal": "#f8f9fa",
+    },
+    "Dark Souls": {
+        "bg_dark":   "#111111",
+        "bg_mid":    "#1e1e1e",
+        "bg_panel":  "#181818",
+        "bg_row":    "#242424",
+        "fg_gold":   "#c0a062",
+        "fg_text":   "#d6d3ce",
+        "fg_dim":    "#8d8b87",
+        "btn_dark":  "#3a3a3a",
+        "btn_go":    "#556b2f",
+        "btn_bak":   "#5a1f1f",
+        "hp_bar":    "#9b2226",
+        "mp_bar":    "#3a86ff",
+        "xp_bar":    "#588157",
+        "gold_bar":  "#c0a062",
+        "input_bg":  "#202020",
+        "story_bg":  "#0d0d0d",
+        "panel_bg":  "#181818",
+        "text_death":  "#d62828",
+        "text_ghost":  "#9d4edd",
+        "text_level":  "#6a994e",
+        "text_quest":  "#e9c46a",
+        "text_vendor": "#4ea8de",
+        "text_normal": "#d9d9d9",
+    },
+    "Arcade": {
+        "bg_dark":   "#111827",
+        "bg_mid":    "#1f2937",
+        "bg_panel":  "#0f172a",
+        "bg_row":    "#273449",
+        "fg_gold":   "#facc15",
+        "fg_text":   "#f8fafc",
+        "fg_dim":    "#94a3b8",
+        "btn_dark":  "#2563eb",
+        "btn_go":    "#16a34a",
+        "btn_bak":   "#dc2626",
+        "hp_bar":    "#ef4444",
+        "mp_bar":    "#3b82f6",
+        "xp_bar":    "#22c55e",
+        "gold_bar":  "#facc15",
+        "input_bg":  "#1e293b",
+        "story_bg":  "#0b1220",
+        "panel_bg":  "#0f172a",
+        "text_death":  "#f87171",
+        "text_ghost":  "#c084fc",
+        "text_level":  "#4ade80",
+        "text_quest":  "#fde047",
+        "text_vendor": "#38bdf8",
+        "text_normal": "#e2e8f0",
+    },
+    "Parchment": {
+        "bg_dark":   "#d8c9a3",
+        "bg_mid":    "#e6d8b8",
+        "bg_panel":  "#f3ead7",
+        "bg_row":    "#e9dcc0",
+        "fg_gold":   "#8b6f47",
+        "fg_text":   "#3e2f1c",
+        "fg_dim":    "#6e5a3c",
+        "btn_dark":  "#a68a64",
+        "btn_go":    "#6b8e23",
+        "btn_bak":   "#b22222",
+        "hp_bar":    "#cd5c5c",
+        "mp_bar":    "#4682b4",
+        "xp_bar":    "#6b8e23",
+        "gold_bar":  "#daa520",
+        "input_bg":  "#f8f1df",
+        "story_bg":  "#f5eedc",
+        "panel_bg":  "#f3ead7",
+        "text_death":  "#b22222",
+        "text_ghost":  "#9370db",
+        "text_level":  "#228b22",
+        "text_quest":  "#8b4513",
+        "text_vendor": "#1e90ff",
+        "text_normal": "#3e2f1c",
+    },
 }
 
 CURRENT_THEME = "Classic"
@@ -1042,13 +1778,16 @@ class IdleRPG:
         theme_name = self.theme.get() if hasattr(self, 'theme') else CURRENT_THEME
         theme = THEMES.get(theme_name, THEMES["Classic"])
         for name, key in [
-            ("HP",   "hp_bar"),
-            ("MP",   "mp_bar"),
-            ("XP",   "xp_bar"),
-            ("Gold", "gold_bar"),
-            ("Blue", "mp_bar"),
+            ("HP",    "hp_bar"),
+            ("MP",    "mp_bar"),
+            ("XP",    "xp_bar"),
+            ("Gold",  "gold_bar"),
+            ("Blue",  "mp_bar"),
+            ("Flash", "mp_bar"),   # bright flash style for spell casts
         ]:
             col = theme.get(key, "#000000")
+            if name == "Flash":
+                col = "#aaddff"   # always bright white-blue regardless of theme
             s.configure(f"{name}.Horizontal.TProgressbar",
                         troughcolor="#222233", background=col,
                         bordercolor="#111122", lightcolor=col,
@@ -1167,6 +1906,7 @@ class IdleRPG:
         self._class_var = tk.StringVar(value=CLASSES[0])
         ScrollableRadioFrame(cls_frm, CLASSES, self._class_var,
                               panel_bg=BG_PANEL).pack(fill="both", expand=True, padx=4, pady=4)
+        self._class_var.trace_add("write", self._on_class_changed)
 
         ccf = tk.Frame(cls_frm, bg=BG_PANEL)
         ccf.pack(fill="x", padx=8, pady=(0, 8))
@@ -1227,6 +1967,28 @@ class IdleRPG:
 
         self._update_stat_display()
 
+        # ─ Spell Preview column ──────────────────────────────────────────
+        spell_frm = tk.LabelFrame(body, text="  Starting Spells  ",
+                                   font=("Segoe UI", 11, "bold"), fg=FG_GOLD,
+                                   bg=BG_PANEL, bd=2, relief="groove")
+        spell_frm.grid(row=0, column=3, sticky="nsew", padx=8, pady=4)
+
+        tk.Label(spell_frm,
+                 text="Spells learned every 5 levels.\nFirst spells for this class:",
+                 font=("Segoe UI", 8), fg=FG_DIM, bg=BG_PANEL,
+                 justify="left").pack(anchor="w", padx=8, pady=(8, 4))
+
+        self._spell_preview = tk.Text(
+            spell_frm, state="disabled",
+            font=("Consolas", 8), bg="#0d0d1e", fg="#88ddff",
+            relief="flat", bd=0, wrap="word", height=16, width=28,
+            padx=6, pady=4)
+        self._spell_preview.pack(fill="both", expand=True, padx=6, pady=(0, 8))
+        self._spell_preview.tag_configure("name",  foreground="#44ff88", font=("Consolas", 8, "bold"))
+        self._spell_preview.tag_configure("tier",  foreground="#ffcc44", font=("Consolas", 7))
+        self._spell_preview.tag_configure("desc",  foreground="#aaaacc", font=("Consolas", 7))
+        self._spell_preview.tag_configure("cost",  foreground="#88ddff", font=("Consolas", 7))
+
         # ── bottom bar ────────────────────────────────────────────────────
         tk.Frame(self.root, bg="#333355", height=1).pack(fill="x", padx=24)
         bot = tk.Frame(self.root, bg=BG_DARK)
@@ -1255,6 +2017,37 @@ class IdleRPG:
             info = CLASS_STATS.get(cls, ("I", "L"))
             self._major_stat.set(f"{info[0]} - {STAT_DEFS[info[0]][0]}")
             self._minor_stat.set(f"{info[1]} - {STAT_DEFS[info[1]][0]}")
+
+        # ── Populate spell preview ────────────────────────────────────────
+        if not hasattr(self, "_spell_preview"):
+            return
+        primary, secondary = CLASS_STATS.get(cls, ("I", "L")) if cls != "__custom_class__" else ("I", "L")
+
+        # Gather Minor + Major spells for primary stat, Minor for secondary
+        preview_spells = []
+        for stat, tiers in [(primary, ["Minor", "Major"]), (secondary, ["Minor"])]:
+            for tier in tiers:
+                pool = TIERED_SPELLS.get(stat, {}).get(tier, [])
+                for name in pool[:2]:  # show up to 2 per bucket
+                    sp = SPELL_BY_NAME.get(name)
+                    if sp:
+                        preview_spells.append((name, sp))
+
+        widget = self._spell_preview
+        widget.config(state="normal")
+        widget.delete("1.0", "end")
+
+        if not preview_spells:
+            widget.insert("end", "No spells found for this class.\n", "desc")
+        else:
+            for name, sp in preview_spells:
+                cost_str = f"{sp['mp_cost']} MP" if sp['mp_cost'] > 0 else "Passive"
+                dur_str  = f"{sp['duration']}t" if sp['duration'] > 0 else "Instant"
+                widget.insert("end", f"{name}\n", "name")
+                widget.insert("end", f"[{sp['tier']}] {cost_str}  {dur_str}\n", "tier")
+                widget.insert("end", f"{sp['description']}\n\n", "desc")
+
+        widget.config(state="disabled")
 
     def _begin_quest(self):
         name = self._name_var.get().strip() or random_name()
@@ -1443,6 +2236,7 @@ class IdleRPG:
             "equip": {s: None for s in EQUIP_SLOTS},
             "inventory": [],
             "spells":    [],
+            "active_effects": [],
             "deaths":    0,
             "quests_completed": 0,
             "prologue_done": False,
@@ -1490,6 +2284,9 @@ class IdleRPG:
         d.setdefault("quests_completed", 0)
         d.setdefault("deaths",           0)
         d.setdefault("spells",           [])
+        d.setdefault("active_effects",   [])
+        # pending_spell_damage is mid-fight transient — never restore from disk
+        d.pop("pending_spell_damage", None)
         d.setdefault("equip",            {s: None for s in EQUIP_SLOTS})
         d.setdefault("prestige_level",   0)
         d.setdefault("current_title", "Vagabond")
@@ -1516,15 +2313,15 @@ class IdleRPG:
         self.quest_step_index    = 0
         self.quest_total_steps   = 0
         self.current_action_type = None
-        self._hist_descending  = False
+        self._hist_descending    = False
         self._current_quest_name = None
+        self._pending_transmute_tier = None
         self.clear_screen()
         self._build_ui()
         self._refresh_story_tree()
         self._refresh_hist_tree()
         self._update_act_bars()
-        for sp in self.char["spells"]:
-            self.spell_list.insert(tk.END, sp)
+        self._refresh_spell_list()
         self._refresh_equip_list()
         self._refresh_inv_list()
         self.start_new_quest()
@@ -1655,6 +2452,56 @@ class IdleRPG:
         self.spell_list.pack(fill="both", expand=True)
         c1.add(fsp)
 
+        # ── Spell tooltip (same pattern as stat_tree tooltip) ──────────────
+        self._spell_tip = tk.Toplevel(self.root)
+        self._spell_tip.withdraw()
+        self._spell_tip.overrideredirect(True)
+        self._spell_tip.configure(bg="#1a1a2e")
+        self._spell_tip_lbl = tk.Label(
+            self._spell_tip, text="", font=("Consolas", 8),
+            bg="#1a1a2e", fg="#aaddff", justify="left",
+            wraplength=280, padx=6, pady=4)
+        self._spell_tip_lbl.pack()
+
+        def _spell_tip_show(event):
+            idx = self.spell_list.nearest(event.y)
+            if idx < 0 or idx >= self.spell_list.size():
+                self._spell_tip.withdraw()
+                return
+            raw = self.spell_list.get(idx)
+            # Strip active-effect annotation to get base name
+            name = raw.split("  [")[0].strip()
+            sp = SPELL_BY_NAME.get(name)
+            if sp:
+                tier    = sp["tier"]
+                cost    = sp["mp_cost"]
+                dur     = sp["duration"]
+                dur_str = f"{dur} actions" if dur > 0 else "instant"
+                cost_str = f"{cost} MP" if cost > 0 else "passive"
+                lines = [
+                    f"{name}  [{tier}]",
+                    f"Cost: {cost_str}   Duration: {dur_str}",
+                    f"Effect: {sp['effect_type'].replace('_', ' ')}",
+                    "",
+                    sp["description"],
+                ]
+                self._spell_tip_lbl.config(text="\n".join(lines))
+                self._spell_tip.deiconify()
+                self._spell_tip.lift()
+            else:
+                self._spell_tip.withdraw()
+
+        def _spell_tip_move(event):
+            if self._spell_tip.winfo_exists() and self._spell_tip.winfo_viewable():
+                self._spell_tip.geometry(f"+{event.x_root + 14}+{event.y_root - 10}")
+
+        def _spell_tip_hide(event):
+            self._spell_tip.withdraw()
+
+        self.spell_list.bind("<Motion>",  _spell_tip_show)
+        self.spell_list.bind("<Motion>",  _spell_tip_move, add="+")
+        self.spell_list.bind("<Leave>",   _spell_tip_hide)
+
         # ─ Col 2: Equipment + Inventory ───────────────────────────────────────
         c2 = tk.PanedWindow(hpane, orient=tk.VERTICAL, sashwidth=2, bg="#1a1a2e")
         hpane.add(c2, width=900)
@@ -1769,7 +2616,11 @@ class IdleRPG:
         encumbrance = (current_weight / max_cap * 100) if max_cap > 0 else 100
 
         if encumbrance >= 100:
-            self._inject_market_quest()
+            # Check if the character has a transmute spell and roll to use it
+            if self._can_transmute_in_field():
+                self._inject_transmute_quest()
+            else:
+                self._inject_market_quest()
             return
 
         if not self.char["prologue_done"]:
@@ -1845,7 +2696,16 @@ class IdleRPG:
         self.char["equip"] = {s: None for s in EQUIP_SLOTS}
         for slot in ["Weapon", "Shield", "Helm", "Body", "Legs", "Ring", "Amulet"]:
             self.char["equip"][slot] = None
-        
+        # Clear all active spell effects — buffs don't survive a reset
+        for eff in self.char.get("active_effects", []):
+            if eff["effect_type"] == "stat_buff":
+                key = eff.get("stat_key", "")
+                if key and key in self.char["stats"]:
+                    self.char["stats"][key] -= eff["magnitude"]
+        self.char["active_effects"] = []
+        self.char.pop("pending_spell_damage", None)
+        self._pending_transmute_tier = None
+
         old_title = self.char.get("current_title", "Vagabond")
         new_title = get_current_title(pl)
         self.char["current_title"] = new_title
@@ -1904,6 +2764,71 @@ class IdleRPG:
             self.act_label.config(text="Prologue")
             self.act_pbar["maximum"] = PROLOGUE_COMPLETE
             self.act_pbar["value"] = self.char["quests_completed"]
+
+    def _can_transmute_in_field(self):
+        """
+        Returns (spell_name, spell_def) if the character has a transmute spell
+        and the random roll succeeds, else False.
+        Higher-tier transmute spells have better odds of firing.
+        """
+        char = self.char
+        transmute_spells = [
+            (name, SPELL_BY_NAME[name])
+            for name in char.get("spells", [])
+            if SPELL_BY_NAME.get(name, {}).get("effect_type") == "transmute"
+        ]
+        if not transmute_spells:
+            return False
+        # Pick the highest-tier spell available
+        tier_order = {"Minor": 0, "Major": 1, "II": 2, "III": 3}
+        best_name, best_sp = max(
+            transmute_spells, key=lambda x: tier_order.get(x[1]["tier"], 0))
+        # Roll chance: Minor 40%, Major 55%, II 70%, III 88%
+        tier_chances = {"Minor": 0.40, "Major": 0.55, "II": 0.70, "III": 0.88}
+        chance = tier_chances.get(best_sp["tier"], 0.40)
+        # Also requires enough MP
+        if char["mp"] < best_sp["mp_cost"]:
+            return False
+        if random.random() < chance:
+            return (best_name, best_sp)
+        return False
+
+    def _inject_transmute_quest(self):
+        """
+        In-field transmutation instead of a market trip.
+        One transmute step per inventory item; no travel or restore.
+        """
+        char = self.char
+        result = self._can_transmute_in_field()
+        if not result:
+            self._inject_market_quest()
+            return
+        spell_name, spell_def = result
+        tier = spell_def["tier"]
+        inv_count = len(char["inventory"])
+        eff = transmute_efficiency(tier, char["stats"].get("I", 10))
+
+        self.quest_template   = {"name": "Field Transmutation"}
+        self.quest_steps      = []
+        for _ in range(inv_count):
+            self.quest_steps.append("transmute")
+        self.quest_step_index  = 0
+        self.quest_total_steps = len(self.quest_steps)
+
+        # Deduct MP for the casting
+        char["mp"] = max(0, char["mp"] - spell_def["mp_cost"])
+        self._pending_transmute_tier = tier
+
+        self.log_story(
+            f"✦ [{spell_name}] Encumbered — transmuting in-field! "
+            f"({int(eff*100)}% rate, {inv_count} items)",
+            "level")
+        self._ach_stat("transmutes_performed", inv_count)
+        self._ach_stat("spells_cast", 1)
+        self._update_char_panel()
+        self.quest_pbar["maximum"] = max(self.quest_total_steps, 1)
+        self.quest_pbar["value"]   = 0
+        self._advance_to_next_step()
 
     def _inject_market_quest(self):
         max_cap = get_max_capacity(self.char["stats"])
@@ -2245,38 +3170,74 @@ class IdleRPG:
             self._ach_stat("actions_rest", 1)
         # ─────────────────────────────────────────────────────────────────────
 
+        # ── Tick active effects (regen, expiry) ───────────────────────────────
+        char = self.char
+        spell_changed = False
+        ticks_active = len([e for e in char.get("active_effects", []) if e["ticks_left"] > 0])
+        if ticks_active:
+            self._ach_stat("ticks_under_effect", ticks_active)
+        for eff in char.get("active_effects", []):
+            if eff["effect_type"] == "hp_regen":
+                gained = min(int(eff["magnitude"]), char["max_hp"] - char["hp"])
+                if gained > 0:
+                    char["hp"] += gained
+            elif eff["effect_type"] == "mp_regen":
+                gained = min(int(eff["magnitude"]), char["max_mp"] - char["mp"])
+                if gained > 0:
+                    char["mp"] += gained
+        tick_active_effects(char)   # decrements ticks, reverts expired stat buffs
+        self._refresh_spell_list()
+
+        # ── Attempt a spell cast for this action type ─────────────────────────
+        if atype not in ("return", "ghost", "body", "reanimate", "respawn", "return_town"):
+            self._attempt_spell_cast(atype)
+
+        # ── Action resolution ─────────────────────────────────────────────────
         if atype == "fight":
             self._resolve_fight()
         elif atype == "loot":
-            gold = int(random.randint(10, 30) * (1 + self.char["stats"]["G"] * 0.02))
-            self.char["gold"] += gold
+            # Gold boost from active effects
+            gold_mult = 1.0
+            for eff in char.get("active_effects", []):
+                if eff["effect_type"] == "gold_boost":
+                    gold_mult += eff["magnitude"]
+            gold = int(random.randint(10, 30) * (1 + char["stats"]["G"] * 0.02) * gold_mult)
+            char["gold"] += gold
             self._ach_stat("gold_earned", gold)
             self._update_gold()
             self.log_story(f"    +{gold} gold")
-            if random.random() < 0.55 + self.char["stats"]["L"] * 0.01:
+            if random.random() < 0.55 + char["stats"]["L"] * 0.01:
                 self._drop_item()
         elif atype == "return":
-            self.char["hp"] = self.char["max_hp"]
-            self.char["mp"] = self.char["max_mp"]
+            char["hp"] = char["max_hp"]
+            char["mp"] = char["max_mp"]
             self.log_story("    Fully healed.")
             self._update_char_panel()
         elif atype == "rest":
             h = random.randint(3, 8)
-            self.char["hp"] = min(self.char["max_hp"], self.char["hp"] + h)
-            self.char["mp"] = min(self.char["max_mp"], self.char["mp"] + h)
+            char["hp"] = min(char["max_hp"], char["hp"] + h)
+            char["mp"] = min(char["max_mp"], char["mp"] + h)
             self.log_story(f"    Recovered {h} HP/MP.")
             self._update_char_panel()
         elif atype == "travel":
             if random.random() < 0.08:
-                g = random.randint(1, 6)
-                self.char["gold"] += g
+                gold_mult = 1.0
+                for eff in char.get("active_effects", []):
+                    if eff["effect_type"] == "gold_boost":
+                        gold_mult += eff["magnitude"]
+                g = int(random.randint(1, 6) * gold_mult)
+                char["gold"] += g
                 self._ach_stat("gold_earned", g)
                 self._update_gold()
                 self.log_story(f"    Found {g} gold on the road!")
         elif atype in ("search","locate","scout","investigate",
                         "gather","escort","inspect","collect","speak"):
             if random.random() < 0.30:
-                xp = random.randint(2, 6)
+                xp_mult = 1.0
+                for eff in char.get("active_effects", []):
+                    if eff["effect_type"] == "xp_boost":
+                        xp_mult += eff["magnitude"]
+                xp = int(random.randint(2, 6) * xp_mult)
                 self._gain_xp(xp)
                 self.log_story(f"    +{xp} XP")
         elif atype == "market":
@@ -2289,6 +3250,10 @@ class IdleRPG:
             self._restore_hp_mp()
         elif atype == "upgrade":
             self._upgrade_gear()
+        elif atype == "transmute":
+            # In-field transmute step injected by _check_transmute_option
+            self._transmute_one_item(self._pending_transmute_tier or "Minor")
+            self._pending_transmute_tier = None
         elif atype == "return_town":
             pass
 
@@ -2296,28 +3261,42 @@ class IdleRPG:
     #  COMBAT & DEATH
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     def _resolve_fight(self):
-        if random.random() < 0.04 + self.char["stats"]["L"] * 0.005:
+        char = self.char
+        if random.random() < 0.04 + char["stats"]["L"] * 0.005:
             self.log_story("    DODGE! Took no damage.")
         else:
             raw  = random.randint(3, 10)
-            mit  = min(0.60, self.char["stats"]["R"] * 0.03)
+            # combat_defense active effects reduce damage
+            mit  = min(0.60, char["stats"]["R"] * 0.03)
+            for eff in char.get("active_effects", []):
+                if eff["effect_type"] == "combat_defense":
+                    mit = min(0.85, mit + eff["magnitude"])
             dmg  = max(1, int(raw * (1 - mit)))
-            self.char["hp"] -= dmg
+            char["hp"] -= dmg
             self.log_story(f"    Took {dmg} damage. "
-                           f"({max(0,self.char['hp'])}/{self.char['max_hp']} HP)")
+                           f"({max(0,char['hp'])}/{char['max_hp']} HP)")
             self._update_char_panel()
-            if self.char["hp"] <= 0:
-                self.char["hp"] = 0
+            if char["hp"] <= 0:
+                char["hp"] = 0
                 self._update_char_panel()
                 self._trigger_death()
                 return
 
         self._ach_stat("enemies_killed", 1)
         self._ach_stat("actions_fight", 1)
-        xp = random.randint(8, 20) + self.char["stats"]["I"] // 5
+        char = self.char
+        # Apply pending spell damage bonus (from combat_damage spells)
+        bonus_dmg = char.pop("pending_spell_damage", 0)
+        if bonus_dmg:
+            self.log_story(f"    ✦ Spell damage: +{bonus_dmg}")
+        xp_mult = 1.0
+        for eff in char.get("active_effects", []):
+            if eff["effect_type"] == "xp_boost":
+                xp_mult += eff["magnitude"]
+        xp = int((random.randint(8, 20) + char["stats"]["I"] // 5) * xp_mult)
         self._gain_xp(xp)
         self.log_story(f"    +{xp} XP")
-        if random.random() < 0.25 + self.char["stats"]["L"] * 0.01:
+        if random.random() < 0.25 + char["stats"]["L"] * 0.01:
             self._drop_item()
         self._check_achievements()
 
@@ -2335,8 +3314,17 @@ class IdleRPG:
         lg = self.char["gold"] // 2
         self.char["gold"] = max(0, self.char["gold"] - lg)
         self.log_story(f"  Lost {lost} items and {lg} gold.", "death")
+        # Revert all active stat buffs and wipe effects
+        for eff in self.char.get("active_effects", []):
+            if eff["effect_type"] == "stat_buff":
+                key = eff.get("stat_key", "")
+                if key and key in self.char["stats"]:
+                    self.char["stats"][key] -= eff["magnitude"]
+        self.char["active_effects"] = []
+        self.char.pop("pending_spell_damage", None)
         self._update_gold()
         self._refresh_inv_list()
+        self._refresh_spell_list()
         self._run_respawn_sequence(0)
 
     def _run_respawn_sequence(self, idx):
@@ -2423,10 +3411,18 @@ class IdleRPG:
                 item["upgrade"] = current_upgrade + 1
                 item["bonus"] = item.get("bonus", 1) + 1
                 item["power"] = item.get("power", 1) + 1
+                # FIX: keep the live stat in sync with the upgraded bonus.
+                # Without this, each upgrade increases item["bonus"] but never
+                # adds the matching point to the character stat. When the item
+                # is later unequipped the full current bonus is subtracted,
+                # causing a net loss of (upgrade count) points per gear swap —
+                # which is how stats silently drift into negative values.
+                self.char["stats"][item["stat"]] += 1
                 self._ach_stat("upgrades_total", 1)
                 self.log_story(f"    UPGRADED [{slot}]: {item_display(item)} +{item['upgrade']} ({cost} gold)", "vendor")
                 self._update_gold()
                 self._refresh_equip_list()
+                self._refresh_stat_tree()
                 self._update_char_panel()
                 return
         self.log_story("    No upgrades available.", "vendor")
@@ -2436,6 +3432,11 @@ class IdleRPG:
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     def _drop_item(self):
         item  = generate_item(self.char["lvl"])
+        # Apply loot quality buff from active effects
+        for eff in self.char.get("active_effects", []):
+            if eff["effect_type"] == "loot_quality":
+                item["power"] += int(eff["magnitude"])
+                item["bonus"] += max(0, int(eff["magnitude"]) // 3)
         slot  = item["slot"]
         equip = self.char["equip"].get(slot)
         if equip is None or item["power"] > equip["power"]:
@@ -2475,6 +3476,261 @@ class IdleRPG:
         else:
             for item in self.char["inventory"]:
                 self.inv_list.insert(tk.END, item_display(item))
+
+    def _refresh_spell_list(self):
+        """Rebuild the spell listbox, annotating any currently active effects."""
+        self.spell_list.delete(0, tk.END)
+        active_names = {e["spell"] for e in self.char.get("active_effects", [])}
+        active_ticks = {e["spell"]: e["ticks_left"] for e in self.char.get("active_effects", [])}
+        for sp_name in self.char.get("spells", []):
+            if sp_name in active_names:
+                t = active_ticks[sp_name]
+                self.spell_list.insert(tk.END, f"{sp_name}  [ACTIVE {t}t]")
+            else:
+                self.spell_list.insert(tk.END, sp_name)
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    #  SPELL CASTING
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    def _attempt_spell_cast(self, action_type):
+        """
+        Evaluate each known spell against the current action type.
+        Priority: HP regen if low HP → MP regen if low MP →
+                  reapply expired buffs → opportunistic cast.
+        A spell will not recast while already active (no-spam rule).
+        Cast chance is gated by class affinity (cast_chance helper).
+        """
+        char = self.char
+        known = char.get("spells", [])
+        if not known:
+            return
+
+        mp = char["mp"]
+        max_mp = char["max_mp"]
+        hp = char["hp"]
+        max_hp = char["max_hp"]
+
+        # Build candidate list: spells whose window includes this action
+        candidates = []
+        for name in known:
+            sp = SPELL_BY_NAME.get(name)
+            if not sp:
+                continue
+            etype = sp["effect_type"]
+            # Check action window
+            if action_type not in SPELL_CAST_WINDOWS.get(etype, set()):
+                continue
+            # No recast if already active (except instant spells which have duration 0)
+            if sp["duration"] > 0 and has_active_effect(char, etype):
+                continue
+            # MP floor: skip non-regen spells if below 25% MP
+            if etype not in ("hp_regen", "mp_regen") and mp < max_mp * 0.25:
+                continue
+            # Must have enough MP
+            if sp["mp_cost"] > mp:
+                continue
+            candidates.append((name, sp))
+
+        if not candidates:
+            return
+
+        # ── Priority selection ──────────────────────────────────────────────
+        def pick_by_type(etype):
+            return [(n, s) for n, s in candidates if s["effect_type"] == etype]
+
+        chosen_name, chosen_sp = None, None
+
+        # 1. Low HP → try hp_regen
+        if hp < max_hp * 0.40:
+            pool = pick_by_type("hp_regen")
+            if pool:
+                chosen_name, chosen_sp = random.choice(pool)
+
+        # 2. Low MP → try mp_regen
+        if not chosen_name and mp < max_mp * 0.35:
+            pool = pick_by_type("mp_regen")
+            if pool:
+                chosen_name, chosen_sp = random.choice(pool)
+
+        # 3. Key buffs/offence whose type isn't running
+        if not chosen_name:
+            priority_types = ["combat_defense", "stat_buff", "xp_boost",
+                              "gold_boost", "loot_quality", "combat_damage",
+                              "transmute", "craft"]
+            for ptype in priority_types:
+                if has_active_effect(char, ptype):
+                    continue
+                pool = pick_by_type(ptype)
+                if pool:
+                    chosen_name, chosen_sp = random.choice(pool)
+                    break
+
+        # 4. Fallback: random from remaining candidates
+        if not chosen_name:
+            chosen_name, chosen_sp = random.choice(candidates)
+
+        # ── Class-affinity cast roll ────────────────────────────────────────
+        chance = cast_chance(chosen_sp, char)
+        if random.random() > chance:
+            return
+
+        # ── Fire the spell ──────────────────────────────────────────────────
+        char["mp"] = max(0, mp - chosen_sp["mp_cost"])
+        self._ach_stat("spells_cast", 1)
+        self._fire_spell(chosen_name, chosen_sp)
+
+    def _flash_cast(self):
+        """Briefly flash the story log background and MP bar to signal a spell cast."""
+        try:
+            self.story_text.config(bg="#1a1a44")
+            self.mp_bar.config(style="Flash.Horizontal.TProgressbar")
+            self.root.after(200, lambda: self.story_text.config(bg="#08080f"))
+            self.root.after(200, lambda: self.mp_bar.config(style="MP.Horizontal.TProgressbar"))
+        except Exception:
+            pass  # safe if widgets not yet built
+
+    def _fire_spell(self, name, sp):
+        """Apply the spell effect to the character."""
+        self._flash_cast()
+        char   = self.char
+        etype  = sp["effect_type"]
+        mag    = sp["magnitude"]
+        dur    = sp["duration"]
+        tier   = sp["tier"]
+
+        # ── Instant effects ─────────────────────────────────────────────────
+        if etype == "transmute":
+            self._transmute_one_item(tier)
+            self.log_story(f"  ✦ {name} — transmuted an item in-field.", "level")
+            self._update_char_panel()
+            self._refresh_spell_list()
+            return
+
+        if etype == "craft":
+            self._craft_one_item()
+            self.log_story(f"  ✦ {name} — item reforged by arcane craft!", "level")
+            self._update_char_panel()
+            self._refresh_spell_list()
+            return
+
+        if etype == "combat_damage":
+            # Stored as a one-shot pending bonus; consumed in _resolve_fight
+            char.setdefault("pending_spell_damage", 0)
+            char["pending_spell_damage"] += int(mag)
+            self.log_story(f"  ✦ {name} — +{int(mag)} spell damage primed.", "level")
+            self._update_char_panel()
+            self._refresh_spell_list()
+            return
+
+        # ── Duration effects ────────────────────────────────────────────────
+        effect = {
+            "spell":       name,
+            "effect_type": etype,
+            "magnitude":   mag,
+            "ticks_left":  dur,
+        }
+
+        if etype == "stat_buff":
+            key = sp.get("stat_key", "")
+            effect["stat_key"] = key
+            if key and key in char["stats"]:
+                char["stats"][key] += int(mag)
+                self.log_story(
+                    f"  ✦ {name} — +{int(mag)} {key} for {dur} actions.", "level")
+        elif etype == "hp_regen":
+            self.log_story(
+                f"  ✦ {name} — regenerating {int(mag)} HP/action for {dur} actions.", "level")
+        elif etype == "mp_regen":
+            self.log_story(
+                f"  ✦ {name} — regenerating {int(mag)} MP/action for {dur} actions.", "level")
+        elif etype == "xp_boost":
+            self.log_story(
+                f"  ✦ {name} — +{int(mag*100)}% XP for {dur} actions.", "level")
+        elif etype == "gold_boost":
+            self.log_story(
+                f"  ✦ {name} — +{int(mag*100)}% gold for {dur} actions.", "level")
+        elif etype == "loot_quality":
+            self.log_story(
+                f"  ✦ {name} — item power +{int(mag)} on next {dur} drops.", "level")
+        elif etype == "combat_defense":
+            self.log_story(
+                f"  ✦ {name} — {int(mag*100)}% damage reduction for {dur} actions.", "level")
+
+        char.setdefault("active_effects", []).append(effect)
+        self._ach_stat("status_effects_applied", 1)
+        self._update_char_panel()
+        self._refresh_spell_list()
+
+    def _transmute_one_item(self, spell_tier):
+        """Convert the oldest inventory item to gold at transmute_efficiency rate."""
+        char = self.char
+        inv  = char.get("inventory", [])
+        if not inv:
+            return
+        item   = inv.pop(0)
+        eff    = transmute_efficiency(spell_tier, char["stats"].get("I", 10))
+        market = item_sell_value(item, char["stats"]["L"])
+        value  = max(1, int(market * eff))
+        lost   = market - value
+        char["gold"] += value
+        self._ach_stat("gold_earned", value)
+        self._ach_stat("items_transmuted", 1)
+        self.log_story(
+            f"  ✦ TRANSMUTE [{int(eff*100)}% rate]  {item_display(item)}",
+            "level")
+        self.log_story(
+            f"    {value} gold received  (market: {market}, saved travel, lost {lost})",
+            "vendor")
+        self._update_gold()
+        self._refresh_inv_list()
+
+    def _craft_one_item(self):
+        """
+        Tier III crafting: reforge the weakest inventory item into a higher-power
+        version of the same slot.  If inventory is empty, try equipped items.
+        """
+        char = self.char
+        inv  = char.get("inventory", [])
+        if inv:
+            # Pick the weakest item by power
+            target = min(inv, key=lambda i: i.get("power", 0))
+            inv.remove(target)
+        else:
+            # Try to upgrade weakest equipped item
+            equipped = [(s, it) for s, it in char["equip"].items() if it is not None]
+            if not equipped:
+                self.log_story("    (No items to craft — inventory empty.)", "vendor")
+                return
+            slot, target = min(equipped, key=lambda x: x[1].get("power", 0))
+            char["stats"][target["stat"]] -= target["bonus"]
+            char["equip"][slot] = None
+
+        # Generate a new item at current level +2 (power bump)
+        crafted = generate_item(char["lvl"] + 2)
+        # Force same slot for thematic consistency
+        crafted["slot"] = target["slot"]
+        crafted["name"] = "Arcane-Forged " + crafted["name"]
+
+        self.log_story(
+            f"    Crafted: {item_display(target)} → {item_display(crafted)}", "vendor")
+        self._ach_stat("items_crafted", 1)
+
+        # Auto-equip if better than current slot
+        slot     = crafted["slot"]
+        equipped = char["equip"].get(slot)
+        if equipped is None or crafted["power"] > equipped["power"]:
+            if equipped:
+                inv.append(equipped)
+                char["stats"][equipped["stat"]] -= equipped["bonus"]
+            char["equip"][slot] = crafted
+            char["stats"][crafted["stat"]] += crafted["bonus"]
+            self.log_story(f"    Auto-equipped: {item_display(crafted)}")
+            self._refresh_equip_list()
+            self._refresh_stat_tree()
+        else:
+            inv.append(crafted)
+
+        self._refresh_inv_list()
 
     def _refresh_story_tree(self):
         self.story_tree.delete(*self.story_tree.get_children())
@@ -2550,8 +3806,12 @@ class IdleRPG:
             new_spell = generate_stat_spell(self.char)
             if new_spell not in self.char["spells"]:
                 self.char["spells"].append(new_spell)
-                self.spell_list.insert(tk.END, new_spell)
-                self.log_story(f"  Learned: {new_spell}", "level")
+                self._ach_stat("spells_learned", 1)
+                sp_def = SPELL_BY_NAME.get(new_spell, {})
+                tier   = sp_def.get("tier", "")
+                cost   = sp_def.get("mp_cost", 0)
+                self.log_story(f"  Learned: {new_spell}  [{tier}] ({cost} MP)", "level")
+                self._refresh_spell_list()
         self._refresh_stat_tree()
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

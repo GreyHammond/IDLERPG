@@ -1,167 +1,115 @@
-# Changelog
+# Changelog — I.D.L.E.R.P.G.
 
-All notable changes to I.D.L.E.R.P.G. will be documented in this file.
-
-## v1.3 - Age of Heroes
-
-### Added
-- **Achievement System** — 148 achievements across 8 categories, tracked persistently in the character save file:
-  - **Wealth** — Gold accumulation milestones from 1K → 500B (26 tiers)
-  - **Combat** — Enemies killed and fights engaged (22 tiers)
-  - **Trading** — Items sold from 1 → 100K (15 tiers)
-  - **Progress** — Progress bar ticks, travel steps, loot runs, searches, and rest actions (43 tiers)
-  - **Prestige** — Universe resets from 1 → 10,000 (12 tiers)
-  - **Level** — Level milestones from 5 → 1,000 (14 tiers)
-  - **Quests** — Quests completed from 1 → 10,000 (12 tiers)
-  - **Equipment** — Fill all equipment slots (1 achievement, more planned)
-
-- **`achievements.py`** — Standalone community-editable definitions file (MIT license):
-  - All achievement data lives here — add new milestones without touching game logic
-  - `format_large()` helper for human-readable large numbers (1K, 1M, 1B, 500B...)
-  - `ACHIEVEMENT_TITLES` dict for future title reward integration
-  - Helper functions: `get_achievements_by_category()`, `get_achievement()`, `get_unlocked_count()`
-
-- **Toast Notification System** — Smooth animated popup on achievement unlock:
-  - Fades in (bottom-right corner), holds 2.8 seconds, fades out
-  - Queues correctly — multiple unlocks don't overlap
-  - Displays achievement name, description, and gold trophy icon
-  - Never crashes the game if the UI is in an unexpected state
-
-- **Achievement Stat Tracking** — Cumulative stats recorded in `char["achievements"]["stats"]`:
-  - Tracked per action: `progress_ticks`, `actions_travel`, `actions_fight`, `actions_loot`, `actions_search`, `actions_rest`
-  - Tracked per event: `gold_earned`, `gold_spent`, `enemies_killed`, `items_sold`, `quests_completed`, `bosses_defeated`, `world_resets`, `times_died`, `max_level`, `upgrades_total`
-  - `max_level` persists across universe resets — tracks highest level ever reached
-  - `quests_completed` in achievement stats is cumulative (unlike `char["quests_completed"]` which resets on prestige)
-
-- **Save Compatibility** — `start_game_from_save()` backfills all achievement stat keys so existing saves load without errors
-
-- **STORY Scrollbar** — Vertical scrollbar for navigating long act histories:
-  - Supports scrolling through all completed acts across multiple prestige cycles
-  - STORY now shows all prior cycles as completed when prestige > 0
-  - Act 1-99 → ☑, Act 100 → ☐, then Act 101-199 → ☐, etc.
-
-- **`_refresh_story_tree()` Overhaul** — Shows complete prestige history:
-  - Loop through all prior prestige cycles: `for prior_pr in range(pr)`
-  - Each prior cycle shows Acts 1-99 as ☑, Act 100 as ☑
-  - Current cycle shows up to current_act as ☑, current act as ☐
-
-- **Act Name Roman Numerals** — `get_act_name()` updated for multi-prestige:
-  - Formula: `cycle = ((act_index - 1) // 100) + 1`
-  - Displays: "The Beginning II", "Defend the Hold III", etc.
-  - Act 100/200/300 keep "Resetting the Universe" (no roman numeral)
-
-- **Quest Completion Guard** — Prevents duplicate quest entries:
-  - Added `_quest_completing` flag to prevent double completion
-  - Flag resets after new quest starts in `_animate_new_quest()`
-
-- **Prestige Title System** — Additive titles that build with each universe reset:
-  - 4-part title progression per prestige: Noun → Adj+Noun → Adj+Noun+Suffix → Prefix+Adj+Noun+Suffix
-  - After each P4 (position 4), a new persona starts with comma separation
-  - Titles stored in arrays: 50 nouns, 50 adjectives, 22 suffixes, 36 prefixes
-
-- **Title Functions**:
-  - `get_current_title(prestige_level)` — returns single title for display
-  - `get_full_title(prestige_level)` — returns full stacked title for tooltip
-
-- **Title UI Display**:
-  - Shows current title under character name, above race
-  - Mouseover tooltip shows full stacked title history
-  - Title updates on universe reset
-
-- **Act Display with Prestige** — Shows full act number including prestige cycle:
-  - Formula: `(prestige × 100) + current_act`
-  - Act 101 shows as "The Beginning II", Act 202 shows as "The Beginning III"
-
-- **Special Act 100 Quest** — After defeating Act 99 boss, triggers special "Resetting the Universe" quest:
-  - 3 travel, 3 fight, 3 search, 1 return steps
-  - After completing → triggers universe reset
-  - Creates seamless prestige transition
-
-- **Dev Menu** — Testing tools in File menu:
-  - Force Universe Reset
-  - Scale to Act 100
-  - Add 10,000 Gold
-  - Add 100 XP
-
-- **Market Day Overhaul** — Individual step-by-step market actions:
-  - Each sell: individual step (not all at once)
-  - Each restore: individual step
-  - Each upgrade attempt: individual step
-  - Steps: travel → find_vendor → sell × inventory → restore → upgrade × 7 slots
-
-### Fixed
-- **Universe Reset Crash** — Removed invalid `self.update_idletasks()` call
-- **Quest History Duplicates** — Fixed quests appearing twice in history after reset:
-  - Now clears: `completed_quests`, `quests_completed`, quest state variables
-  - Resets: `quest_template`, `quest_steps`, `quest_step_index`, `_current_quest_name`
-  - Resets: `in_boss_quest`, `boss_attempts`
-- **Character Panel Bars** — HP/MP/XP/ENC now update after each quest
-- **Step Label Display** — Replaces underscores with spaces (e.g., "return_town" → "Return Town")
-- **Duplicate Act Progress Bar** — Removed conflicting function definition
-- **Act Progression Bar** — Fixed duplicate `_update_act_bars()` that was preventing prologue tracking from working correctly
-- **Encumbrance Emergency Return** — Player at 100% encumbrance now triggers automatic return:
-  - Check runs after each quest step completes
-  - If 100%+, triggers emergency return sequence
-  - Return time proportional to quest progress: `steps_remaining × 8 seconds`
-  - Rejoin time also proportional: `steps_done × 8 seconds`
-  - Blue progress bar shows entire return-and-resume cycle
-  - Saves quest state and resumes from exact step where player left off
-  - Protects against TclError: verifies pbar exists before access
-- **`_dev_force_reset()` Fix** — Added `_refresh_story_tree()` call:
-  - Now displays all 1-99 as ☑ when starting Act 100 special quest
-
-### Technical Notes
-- `_ach_stat(key, amount)` — increment helper used at every tracked event
-- `_ach_stat_set(key, value)` — used for max-value tracking (e.g. `max_level`)
-- `_check_achievements()` — called after fights, sells, quests, level-ups, resets, and deaths
-- Graceful import fallback: if `achievements.py` is missing, game runs normally with no achievements
+All notable changes to this project are documented here.
+Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## v1.2 - Age of Ascension
+## [v1.4] — Age of Magic
 
 ### Added
-- **Expanded Act System** - Now supports 100 acts per cycle:
-  - Acts 1-98: Regular questing with 98 unique narrative act names
-  - Act 99: "The Final Battle" - harder boss (25 fights, 6 loot)
-  - Act 100: "Resetting the Universe" - resets gold, inventory, equipment
-  - Acts 101+: Continues with Roman numeral cycles (II, III, IV...)
 
-- **Roman Numeral Support** - `to_roman()` function for cycle numbering
+**Spell System — Core**
+- `SPELL_DEFINITIONS` — 56 fully-defined spells replacing the old bare string lists. Each spell carries `mp_cost`, `duration`, `effect_type`, `magnitude`, `stat`, `tier`, and `description`.
+- `SPELL_BY_NAME` — O(1) lookup dict auto-built from definitions.
+- `TIERED_SPELLS` — Auto-rebuilt from `SPELL_DEFINITIONS`; generator logic unchanged.
+- `char["active_effects"]` — New runtime list tracking all running spell effects. Each entry stores spell name, effect type, magnitude, ticks remaining, and stat delta for safe revert.
+- `tick_active_effects()` — Decrements ticks each action; reverts expired stat buffs by stored delta.
+- `has_active_effect()` — Guards against recasting the same effect type while it is still running.
+- `cast_chance()` — Class-affinity gating: primary stat spells cast at full rate, secondary at 50%, off-stat at 16%.
+- `SPELL_CAST_WINDOWS` — Dict mapping each effect type to the action types it is permitted to fire during.
+- `_attempt_spell_cast()` — Priority queue: HP regen if low → MP regen if low → expired buffs → opportunistic. MP floor: no non-regen spells below 25% MP.
+- `_fire_spell()` — Dispatches cast to the correct effect path, logs with ✦ prefix, updates UI.
 
-- **Universe Reset** - `_reset_universe()` method:
-  - Keeps: Level, XP, spells
-  - Resets: Gold, Inventory, Equipment, Quests completed, Act progress
+**10 Effect Categories**
+- `xp_boost` — % XP bonus while active.
+- `gold_boost` — % gold bonus while active.
+- `stat_buff` — Directly raises `char["stats"][key]`; cleanly reverted on expiry or death.
+- `hp_regen` — Restores HP each tick while active.
+- `mp_regen` — Restores MP each tick while active.
+- `combat_damage` — Stored as `pending_spell_damage`; consumed in `_resolve_fight`.
+- `combat_defense` — Reduces incoming damage by magnitude fraction in `_resolve_fight`.
+- `loot_quality` — Adds power/bonus bump to items in `_drop_item` while active.
+- `transmute` — Converts oldest inventory item to gold at efficiency rate.
+- `craft` — Tier III: reforges weakest item into an Arcane-Forged version at `level+2`.
 
-### Changed
-- **get_act_name()** - Updated to handle 99/100/101+ acts with proper naming:
-  - Act 99: "The Final Battle"
-  - Act 100: "Resetting the Universe"
-  - Act 101+: Uses Roman numerals (The Beginning II, etc.)
+**Transmutation**
+- `transmute_efficiency()` — Logarithmic formula: `tier_base + 0.18 × log(1 + I/20)`. Hard cap 0.92.
+- `_transmute_one_item()` — Converts item at efficiency rate, logs rate and gold lost vs market.
+- Encumbrance path now checks `_can_transmute_in_field()` before defaulting to market. Roll chance scales by tier (Minor 40% → Tier III 88%).
+- `_inject_transmute_quest()` — Builds a queue of `transmute` steps instead of a market trip.
 
-- **Boss Quest Cycling** - Bosses now cycle through BOSS_QUESTS for acts 1-98
+**Arcane Crafting (Tier III)**
+- `_craft_one_item()` — Targets weakest inventory item, generates `level+2` replacement named "Arcane-Forged …", auto-equips if better.
+
+**UI**
+- Spell tooltip on mouse-over: shows name, tier, MP cost, duration, effect type, full description.
+- `[ACTIVE Nt]` live countdown in spell list, updated every action.
+- `_flash_cast()` — Story log and MP bar flash bright on cast, revert after 200ms.
+- Creation screen column 3: spell preview panel showing starting spells for each class, updates live as class is selected.
+- Level-up spell log now shows tier and MP cost.
+- `transmute` added to `ACTION_LABELS` and `ACTION_FLAVORS`.
+
+**Lifecycle Safety**
+- Death reverts all active stat buffs before clearing `active_effects`.
+- Prestige clears `active_effects`, `pending_spell_damage`, `_pending_transmute_tier`.
+- Save/load: `pending_spell_damage` popped on load; `active_effects` defaults to `[]` for old saves.
+
+**Achievements (31 new — magic category)**
+- `spells_learned` — 6 tiers (1 → 56, "The Omnimancer")
+- `spells_cast` — 7 tiers (1 → 5,000, "The Eternal Caster")
+- `transmutes_performed` — 5 tiers (1 → 500, "The Philosopher")
+- `items_crafted` — 4 tiers (1 → 25, "The Architect")
+- `status_effects_applied` — 4 tiers (10 → 500)
+- `ticks_under_effect` — 5 tiers (50 → 5,000, "The Living Spell")
+
+**Balance**
+- MP costs increased: Minor +2, Major +4, Tier II +7, Tier III +12.
 
 ---
 
-## v1.1 - Age of Artifacts
+## [v1.3] — Age of Heroes
 
 ### Added
-- **Grammar-Based Item Naming System** - Items now build names dynamically based on power level:
-  - Power 1-9: `[Base]` → "Dagger"
-  - Power 10-19: `[Prefix] [Base]` → "Polished Dagger"
-  - Power 20-34: `[Prefix] [Material] [Base]` → "Polished Steel Dagger"
-  - Power 35-49: `[Quality] [Material] [Base] [Suffix]` → "Vorpal Steel Dagger of Whispers"
-  - Power 50+: `[Title], the [Quality] [Material] [Base] [Suffix]` → "The Harbinger, the Vorpal Steel Dagger of Whispers"
+- Full achievement system with 148 achievements across wealth, combat, quests, levels, prestige, and trading categories.
+- Prestige title system — stacked titles built with each universe reset, with full history tooltip.
+- Bug fix: item bonuses now tracked and reverted correctly on unequip; repeated unequip no longer drives stats negative.
+- 20 playable races and 20 classes with unique stat modifiers.
+- Dynamic grammar-based item naming ("Rusty Dagger" → "The Harbinger, the Vorpal Steel Dagger of Whispers").
+- Multi-slot equipment system (Weapon, Shield, Helm, Body, Legs, Ring, Amulet).
+- Death sequence with ghost mechanics, respawn, and inventory/gold loss.
+- Encumbrance system — auto-returns to town at 100% capacity.
+- 100-act cycle with boss quests, universe reset, and infinite prestige loop.
+- Dev menu (force reset, level scaling, gold/XP injection).
 
-- **5 New Tiered Name Pools:**
-  - `LOW_TIER_PREFIX` - Physical conditions (Rusty, Polished, Weighted...)
-  - `MID_TIER_MATERIAL` - Substances (Steel, Mithril, Adamantite...)
-  - `HIGH_TIER_SUFFIX` - "of X" phrases (of Whispers, of the Void...)
-  - `QUALITY_TIER` - Legendary descriptors (Vorpal, Ruinous, Exalted...)
-  - `LEGENDARY_TITLES` - Unique names (The Harbinger, Doomgiver...)
+---
 
-- **Act Display Fix** - Added `get_act_name()` helper to safely handle Act 21+ displaying "Restarting the Universe" instead of crashing
+## [v1.2] — Lorekeeper
 
-### Confirmed Formulas
-- `power = level + random(0, 1)`
-- `bonus = 1 + (level // 3)`
+### Added
+- CHANGELOG introduced.
+- Spell pool system (Minor → Major → Tier II → Tier III) based on class stat affinity.
+- Spell list UI panel with per-level unlock every 5 levels.
+- 98 unique act names.
+- Action flavor text system (`ACTION_FLAVORS`).
+- Grammar-based loot prefix/suffix/material/quality system.
+
+---
+
+## [v1.1]
+
+### Added
+- Persistent save/load (JSON).
+- Multiple equipment slots.
+- Market trip system with sell, restore, and upgrade steps.
+- Progress bar UI for quest and action timing.
+
+---
+
+## [v1.0] — Initial Release
+
+### Added
+- Core idle loop: quests, actions, XP, levelling.
+- Character creation with stat rolling (4d6 drop lowest).
+- Basic inventory and gold system.
+- Tkinter UI with story log, stat panel, and equipment list.
